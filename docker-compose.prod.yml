@@ -10,7 +10,7 @@ services:
       - common
     environment:
       PORT: 6969
-      MONGO_URI: "mongodb+srv://admin123:12345@atlascluster.opryj2k.mongodb.net/"
+      MONGO_URI: mongodb://mongo/travel_db
       SALT_ROUNDS: "kamenriderDECADE"
       JWT_SECRET: "this is jwt serect"
   mongo:
