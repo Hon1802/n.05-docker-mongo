@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  node:
+    container_name: node_server
+    build: 
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 6969:6969
+    volumes:
+      - .:/app
+    command: yarn start
+    networks:
+      - common
+    environment:
+      PORT: 6969
+      MONGO_URI: "mongodb+srv://admin123:12345@atlascluster.opryj2k.mongodb.net/"
+      SALT_ROUNDS: "kamenriderDECADE"
+      JWT_SECRET: "this is jwt serect"
+    
+networks:
+  common: 
