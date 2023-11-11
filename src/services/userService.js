@@ -102,6 +102,7 @@ export const uploadAvatar = (path, idUser) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let userData = {};
+            
             const user = await User.updateOne(
                 { _id: idUser }, // Filter: Find the user with the given id
                 { $set: { urlAvatar: path } } // Update: Set the urlAvatar field to the new path

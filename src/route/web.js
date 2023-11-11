@@ -6,7 +6,8 @@ import { handleLogin,
          updateAvatar,
          getUserById,
          updateInfoById,
-         deleteUserById
+         deleteUserById,
+         updateNewPassword
         } 
     from "../controllers/customers/userController.js" ;
 import {
@@ -27,9 +28,9 @@ let initWebRoutes = (app)=>{
     router.post('/api/login', handleLogin );
     router.post('/api/register', handleRegister );
     router.post('/api/upload-avatar', updateAvatar);
-    router.post('/api/update-password', getUserById); 
+    router.post('/api/update-password', updateNewPassword); 
     router.get('/api/personal', getUserById);
-    router.get('/api/update-by-id', updateInfoById);
+    router.post('/api/update-by-id', updateInfoById);
     router.post('/api/delete-account', deleteUserById);
     //tour
     //get tour by id
