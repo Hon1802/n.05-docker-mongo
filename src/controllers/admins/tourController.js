@@ -119,9 +119,27 @@ export const getTourById = async (req, res) => {
 //get all tour
 export const getAllTour = async(req, res) =>{
     let tourData = await handleGetAllTour();
+    const urlImageN1Array = tourData.data.map(async (item) => 
+        {
+            let imagePaths = item.urlImageN1;
+            if( imagePaths !== 'none')
+            {
+                try {
+                    item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
+                   
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+            else {
+                item.urlImageN1 = 'no image';
+            }
+            return item;
+        });
     return res.status(200).json({
         errCode: tourData.errCode,
-        message: tourData.errMessage,
+        message: tourData.message,
+        urlImageN1Array,
         tourData
     }) 
 }
@@ -138,20 +156,7 @@ const storage = multer.diskStorage({
   });
 export const upload = multer({ storage });
 
-// const convertImage = (urlPath) => {
-//     return new Promise((resolve, reject) => {
-//         fs.readFile(urlPath, (err, data) => {
-//             if (err) {
-//                 console.log(err);
-//                 reject('Internal Server Error');
-//             } else {
-//                 // Convert data to Base64
-//                 const base64Image = data.toString('base64');
-//                 resolve(base64Image);
-//             }
-//         });
-//     });
-// };
+// function for many image
 const convertImage = async (urlPaths) => {
     try {
         const base64Images = await Promise.all(
@@ -178,3 +183,30 @@ const readFileAsync = (urlPath) => {
         });
     });
 };
+// function for each image
+
+const convertOneImage = async (urlPath) => {
+    // try {
+        const data = await fs.readFile(urlPath);
+        const base64Image = data.toString('base64');
+        return base64Image;
+    // } catch (error) {
+    //     console.error(error);
+    //     throw 'Internal Server Error';
+    // }
+};
+// const convertOneImage = (urlPath) => {
+//     return new Promise((resolve, reject) => {
+//         fs.readFile(urlPath, (err, data) => {
+//             if (err) {
+//                 console.log(err);
+//                 reject('Internal Server Error');
+//             } else {
+//                 // Convert data to Base64
+//                 const base64Image = data.toString('base64');
+//                 resolve(base64Image);
+//             }
+//         });
+//     });
+// };
+    
