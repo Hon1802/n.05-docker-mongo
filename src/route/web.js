@@ -12,7 +12,10 @@ import { handleLogin,
     from "../controllers/customers/userController.js" ;
 import {
     handleAddNew,
-    updateImageTours
+    updateImageTours,
+    updateStatusTour,
+    getTourById, 
+    getAllTour
 } from "../controllers/admins/tourController.js"
 
 
@@ -34,11 +37,11 @@ let initWebRoutes = (app)=>{
     router.post('/api/delete-account', deleteUserById);
     //tour
     //get tour by id
-    router.get('/api/get-tour-by-id');
-    router.get('/api/get-all-tours');
+    router.get('/api/get-tour-by-id',getTourById );
+    router.get('/api/get-all-tours', getAllTour);
     router.post('/api/add-new-tour', handleAddNew);
     router.post('/api/update-images-tour', updateImageTours);
-    router.post('/api/update-status-tour');
+    router.post('/api/update-status-tour', updateStatusTour);
     //ticket
     //get ticket by id
     router.get('/api/get-ticket-by-id');

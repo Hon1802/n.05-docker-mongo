@@ -105,8 +105,8 @@ export const updateProductById = async (id, name, address) =>{
 
 export const deleteProductById = async (req,res) =>{
     return res.status(200).json({
-    errCode: userData.errCode,
-    message: userData.message,
+    errCode: tourData.errCode,
+    message: tourData.message,
     }) 
 }
 
@@ -116,7 +116,7 @@ export const uploadImages = (paths, idTour) =>{
         try{
             let tourData = {};
             const tour = await Tour.updateOne(
-                { _id: idTour }, // Filter: Find the user with the given id
+                { _id: idTour }, // Filter: Find the tour with the given id
                 { 
                     $set: { 
                     urlImageN1 : paths[0],
@@ -126,7 +126,7 @@ export const uploadImages = (paths, idTour) =>{
                 } // Update: Set the urlAvatar field to the new path
               );
             if (tour.nModified === 0) {
-            // If no user was modified, it means the user with the given id was not found
+            // If no tour was modified, it means the tour with the given id was not found
                 tourData.errCode = 404;
                 tourData.errMessage = 'Tour not found';
                 resolve(tourData);
@@ -139,6 +139,112 @@ export const uploadImages = (paths, idTour) =>{
             tourData.errCode = 3;
             tourData.errMessage ='Error uploading tour Images'             
             rejects(tourData)
+        }
+    })
+};
+
+//update status [0,1]
+export const changeStatusTour = (tourId, status) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let tourData = {};
+            let isExist = await Tour.findOne({_id: tourId }).exec();
+            if(isExist)
+            {   
+                const tour = await Tour.updateOne(
+                    { _id: tourId }, // Filter: Find the tour with the given id
+                    { $set: { 
+                        status: status
+                        } } // Update:
+                    );
+                tourData.errCode = 0;
+                tourData.errMessage = 'Success';
+                resolve(tourData);
+                
+            }else{
+                tourData.errCode = 1;
+                tourData.errMessage ='Your tour select not exist'
+                resolve(tourData)
+            }
+        }catch(e){
+            tourData.errCode = 3;
+            tourData.errMessage ='Error connect'
+            rejects(tourData)
+        }
+    })
+};
+// get by id
+
+export const handleGetTourById = (tourId) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let tourData = {};
+            let isExist = await Tour.findOne({_id: tourId }).exec()        
+            if(isExist)
+            {   
+                tourData.errCode = 2;
+                tourData.errMessage ='Get tour by id success';
+                tourData.data = {
+                    ...isExist.toObject()
+                }
+                resolve(tourData)
+            }else{
+                tourData.errCode = 3;
+                tourData.errMessage ='Error connect'
+                resolve(tourData) 
+            }
+        }catch(e){
+            tourData.errCode = 3;
+            tourData.errMessage ='Your account was not created'             
+            rejects(tourData)
+        }
+    })
+};
+//get all tour
+
+export const handleGetAllTour = (tourId) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let tourData = {};
+            let tours = await Tour.find().exec();        
+            if(tours)
+            {   
+                tourData.errCode = 2;
+                tourData.errMessage ='Get tour by id success';
+                tourData.data = tours.map(tour => tour.toObject());
+                resolve(tourData)
+            }else{
+                tourData.errCode = 3;
+                tourData.errMessage ='Error connect'
+                resolve(tourData) 
+            }
+        }catch(e){
+            tourData.errCode = 3;
+            tourData.errMessage ='Your account was not created'             
+            rejects(tourData)
+        }
+    })
+};
+
+//function check id or email exist or no
+export const checkExist = (text, types) =>{
+    return new Promise( async (resolve, rejects)=>{
+        let checks = false;
+        try{
+            if(types === 'id')
+            {
+                let isExist = await Tour.findOne({_id: text }).exec();
+                if(isExist)
+                {
+                    checks = true;
+                    resolve(checks);
+                } else{
+                    resolve(checks);
+                }
+            } 
+        }catch(e){    
+            checks = 0;          
+            rejects(checks)
         }
     })
 };

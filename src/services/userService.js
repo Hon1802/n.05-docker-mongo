@@ -136,7 +136,7 @@ export const getById = (userId) =>{
                 userData.errMessage ='Get user by id success';
                 userData.data = {
                     ...isExist.toObject(),
-                    password:'Not show',
+                    password:'Not show', 
                 }
                 resolve(userData)
             }else{

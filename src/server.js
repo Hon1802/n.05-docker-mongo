@@ -7,15 +7,17 @@ import connect from "./database/database.js"
 import checkToken from "./authentication/auth.js"
 
 import dotenv from 'dotenv';
+import cors from 'cors'
 
 dotenv.config();
 let app = express();
 // environment
 import { port, mongoURL} from "./config/main.js";
 //check token
-app.use(checkToken)
+app.use(checkToken);
+app.use(cors());
 
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
 connect(mongoURL);

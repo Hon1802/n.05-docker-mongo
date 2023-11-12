@@ -93,17 +93,16 @@ export const getUserById = async (req, res) => {
         let userId = req.body.id;
         if(await checkExist(userId, 'id'))
         {
-            const imagePath = 'src/public/imageUser/1699545647572-699767006-dd.jpg';
+            let userData = await getById(userId);
+            const imagePath = userData.data.urlAvatar || "src/public/default/avatar.jpg";
+            let base64Image = '';
             fs.readFile(imagePath, async (err, data)  => {
                 if (err) {
                     console.log(err)
                   return res.status(500).send('Internal Server Error');
                 }
-                // Chuyển đổi dữ liệu thành Base64
-                const base64Image = data.toString('base64');
-                // Trả về dữ liệu Base64
-                // res.json({ base64Image });
-                let userData = await getById(userId);
+                // Trans from image to Base64
+                base64Image = data.toString('base64');
                 if(userData.errCode == 2)
                 {
                     userData = {
@@ -116,7 +115,8 @@ export const getUserById = async (req, res) => {
                     message: userData.message,
                     userData
                 }) 
-              });
+            });
+            
         }
     } catch(e)
     {
@@ -199,3 +199,4 @@ const storage = multer.diskStorage({
     },
   });
 export const upload = multer({ storage });
+
