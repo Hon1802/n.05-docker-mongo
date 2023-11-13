@@ -1,9 +1,13 @@
 
 import jwt from "jsonwebtoken";
-export default function checkToken(req, res, next) {
+import {
+    checkTokenExist
+} from "../services/userService.js"
+export default async function checkToken(req, res, next) {
     //bypass login, register, 
     if(req.url.toLowerCase().trim() == '/api/login'.toLowerCase().trim() 
         || req.url.toLowerCase().trim() =='/api/register'.toLowerCase().trim()
+        || req.url.toLowerCase().trim() =='/api/logout'.toLowerCase().trim()
         || req.url.toLowerCase().trim() =='/'.toLowerCase().trim()
     ){
         next()
@@ -15,18 +19,29 @@ export default function checkToken(req, res, next) {
         const isExpired = Date.now() >= jwtObject.exp * 1000
         if(isExpired)
         {
-            res.status(200).json({
+            res.status(403).json({
                 errCode: 1,
                 message: "token is expired",
             }) 
             res.end()
         }
         else{
-            next()
+            let checkToken = await checkTokenExist(token);
+            if(checkToken)
+            {
+                next()
+            }
+            else {
+                res.status(403).json({
+                    errCode: 1,
+                    message: "token is expired",
+                }) 
+                res.end()
+            }
         }
         debugger
     }catch(e){
-        res.status(200).json({
+        res.status(401).json({
             errCode: 1,
             message: "Not match token",
         }) 

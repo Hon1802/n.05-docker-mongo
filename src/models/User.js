@@ -47,6 +47,9 @@ export default mongoose.model('User',
         urlAvatar:{
             type:String
         },
+        token:{
+            type:String       
+        },
         status:{
             type:String,
             required:true        

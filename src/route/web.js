@@ -2,6 +2,7 @@ import express from "express";
 //import controllers
 import {    getHomePage    } from "../controllers/homeController.js";
 import { handleLogin,
+         handleLogOut,
          handleRegister,
          updateAvatar,
          getUserById,
@@ -30,6 +31,7 @@ let initWebRoutes = (app)=>{
     });
     router.post('/api/login', handleLogin );
     router.post('/api/register', handleRegister );
+    router.post('/api/logout', handleLogOut);
     router.post('/api/upload-avatar', updateAvatar);
     router.post('/api/update-password', updateNewPassword); 
     router.get('/api/personal', getUserById);

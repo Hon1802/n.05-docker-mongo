@@ -5,10 +5,9 @@ import jwt from "jsonwebtoken";
 import bcrypt from 'bcrypt';
 import { salt_rounds , jwt_secret} from "../config/main.js";
 // check login
-export const handleUserLogin = (email,password) =>{
+export const handleUserLogin = (email, password, userData = {}) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
-            let userData = {};
             let isExist = await User.findOne({email}).exec();
             if(isExist && isExist.status == 1)
             {   
@@ -18,14 +17,18 @@ export const handleUserLogin = (email,password) =>{
                     //create java web token
                     // use for user use web, if you have token you will have role to do st, if you have't you can't do it, and login and register need't token
                     let token = jwt.sign({
-                        data: isExist
+                        data : {
+                            _id : isExist._id,
+                            name : isExist.name,
+                            email : isExist.email
+                        }
                         }, 
                         jwt_secret,
                         {
                             expiresIn: '30 days' // 30 day
-
                         }
                     )
+                    let saveTo = await saveToken(isExist._id, token)
                     userData.errCode = 2;
                     userData.errMessage ='you can get access token';
                     userData.data = {
@@ -49,6 +52,34 @@ export const handleUserLogin = (email,password) =>{
             userData.errCode = 3;
             userData.errMessage ='Error connect'
             rejects(userData)
+        }
+    })
+};
+// check out
+export const handleUserLogOut = (userId) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let userData = {};
+            const user = await User.updateOne(
+                { _id: userId }, // Filter: Find the user with the given id
+                { 
+                    $set: { 
+                        token: 'expired'
+                    }                     
+                } // Update
+              );
+            //create java web token
+            // use for user use web, if you have token you will have role to do st, if you have't you can't do it, and login and register need't token
+            // let destroyToken = jwt.destroy(token)
+            userData.status =200;
+            userData.errCode = 2;
+            userData.errMessage ='Logout success';
+            resolve(userData)
+        }catch(e){
+            let userData = {};
+            userData.status = 404;
+            userData.errCode = 1;
+            resolve(userData)
         }
     })
 };
@@ -285,6 +316,42 @@ export const checkExist = (text, types) =>{
                     resolve(checks);
                 }
             }
+        }catch(e){    
+            checks = 0;          
+            rejects(checks)
+        }
+    })
+};
+export const saveToken = (userId, token) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            const user = await User.updateOne(
+                { _id: userId }, // Filter: Find the user with the given id
+                { 
+                    $set: { 
+                        token: token
+                    }                     
+                } // Update
+              );
+            resolve({ success: true, message: 'Token saved successfully.' });
+        }catch(e){        
+            rejects({ success: false, error : e.message })
+        }
+    })
+};
+//check token
+export const checkTokenExist = (token) =>{
+    return new Promise( async (resolve, rejects)=>{
+        let checks = false;
+        try{            
+            let isExist = await User.findOne({token: token}).exec();  
+            if(isExist)
+            {
+                checks = true;
+                resolve(checks);
+            } else{
+                resolve(checks);
+            }            
         }catch(e){    
             checks = 0;          
             rejects(checks)

@@ -6,7 +6,8 @@ import {
     getById,
     updateById,
     updatePassword,
-    changeStatusUser
+    changeStatusUser,
+    handleUserLogOut
 } from "../../services/userService.js" ;
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -21,7 +22,7 @@ export const handleLogin = async (req,res) =>{
     let email = req.body.email;
     let password = req.body.password;
     if (!email || !password){
-        return res.status(500).json({
+        return res.status(400).json({
             errCode: 1,
             message:"Missing inputs value"
         }) 
@@ -36,6 +37,22 @@ export const handleLogin = async (req,res) =>{
         userData
     }) 
 }
+//logout
+export const handleLogOut = async (req, res) =>{
+    let userId = req.body.id;
+    if (!userId){
+        return res.status(400).json({
+            errCode: 1,
+            message:"Missing inputs value"
+        }) 
+    }
+    let userData = await handleUserLogOut(userId);
+    return res.status(userData.status).json({
+        errCode: userData.errCode,
+        message: userData.message,
+        // yourEmail: email
+    }) 
+}
 //register
 export const handleRegister = async (req, res) =>{
     let fullName = req.body.fullName;
@@ -45,7 +62,7 @@ export const handleRegister = async (req, res) =>{
     let phone = req.body.phone;
     let gender = req.body.gender;
     if (!email || !password){
-        return res.status(500).json({
+        return res.status(400).json({
             errCode: 1,
             message:"Missing inputs value"
         }) 
