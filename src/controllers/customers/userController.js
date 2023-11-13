@@ -49,7 +49,7 @@ export const handleLogOut = async (req, res) =>{
     let userData = await handleUserLogOut(userId);
     return res.status(userData.status).json({
         errCode: userData.errCode,
-        message: userData.message,
+        message: userData.errMessage,
         // yourEmail: email
     }) 
 }

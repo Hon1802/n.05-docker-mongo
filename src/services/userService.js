@@ -72,13 +72,14 @@ export const handleUserLogOut = (userId) =>{
             // use for user use web, if you have token you will have role to do st, if you have't you can't do it, and login and register need't token
             // let destroyToken = jwt.destroy(token)
             userData.status =200;
-            userData.errCode = 2;
+            userData.errCode = 0;
             userData.errMessage ='Logout success';
             resolve(userData)
         }catch(e){
             let userData = {};
             userData.status = 404;
             userData.errCode = 1;
+            userData.errMessage ='Not connect';
             resolve(userData)
         }
     })
