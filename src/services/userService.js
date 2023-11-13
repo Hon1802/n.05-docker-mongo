@@ -28,8 +28,9 @@ export const handleUserLogin = (email, password, userData = {}) =>{
                             expiresIn: '30 days' // 30 day
                         }
                     )
-                    let saveTo = await saveToken(isExist._id, token)
-                    userData.errCode = 2;
+                    let saveTo = await saveToken(isExist._id, token);
+                    userData.status = 200;
+                    userData.errCode = 0;
                     userData.errMessage ='you can get access token';
                     userData.data = {
                         ...isExist.toObject(),
@@ -38,20 +39,24 @@ export const handleUserLogin = (email, password, userData = {}) =>{
                     }
                     resolve(userData)
                 } else {
-                    userData.errCode = 2;
+                    userData.status = 401;
+                    userData.errCode = 1;
                     userData.errMessage ='Wrong password'
                     resolve(userData)
                 }
                 resolve()
             }else{
-                userData.errCode = 1;
+                userData.status = 404;
+                userData.errCode = 2;
                 userData.errMessage ='Your account not exist'
                 resolve(userData)
             }
         }catch(e){
+            let userData = {};
+            userData.status = 404;
             userData.errCode = 3;
             userData.errMessage ='Error connect'
-            rejects(userData)
+            resolve(userData)
         }
     })
 };
@@ -92,9 +97,11 @@ export const handleUserRegister = (fullName, address, email,password, phone, gen
             let isExist = await User.findOne({email}).exec();            
             if(isExist)
             {   
-                userData.errCode = 1;
-                userData.errMessage ='Your account was exist'            
+                userData.status = 409;
+                userData.errCode = 3;
+                userData.errMessage = 'Username already exists';
                 resolve(userData)
+
             }else{
                 try {
                     const hashedPassword = await bcrypt.hash(password,parseInt(salt_rounds))
@@ -109,6 +116,7 @@ export const handleUserRegister = (fullName, address, email,password, phone, gen
                         urlAvatar : 'none',
                         status: '1'
                     })
+                    userData.status = 200;
                     userData.errCode = 0;
                     userData.errMessage ='Your account was create';
                     userData.data = {
@@ -117,12 +125,15 @@ export const handleUserRegister = (fullName, address, email,password, phone, gen
                     }
                     resolve(userData)
                 } catch(e){
-                    userData.errCode = 2;
-                    userData.errMessage = e
+                    userData.status = 422;
+                    userData.errCode = 4;
+                    userData.errMessage = 'Unprocessable Entity'  ;
                     resolve(userData)
                 }  
             }
         }catch(e){
+            let userData = {};
+            userData.status = 500;
             userData.errCode = 3;
             userData.errMessage ='Your account was not created'             
             rejects(userData)

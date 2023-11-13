@@ -30,9 +30,9 @@ export const handleLogin = async (req,res) =>{
     }
     let userData = await handleUserLogin(email, password);
 
-    return res.status(200).json({
+    return res.status(userData.status).json({
         errCode: userData.errCode,
-        message: userData.message,
+        message: userData.errMessage,
         // yourEmail: email
         userData
     }) 
@@ -69,7 +69,7 @@ export const handleRegister = async (req, res) =>{
     }
     let userData = await handleUserRegister(fullName, address, email,password, phone, gender);
 
-    return res.status(200).json({
+    return res.status(userData.status).json({
         errCode: userData.errCode,
         message: userData.errMessage,
         userData
@@ -88,9 +88,6 @@ export const updateAvatar = async (req, res) =>{
             let pathName = req.file.filename;
             let userId = req.body.id;
             let pathFile = 'src/public/imageUser/' + pathName;
-            console.log("////////")
-            console.log(userId)
-            console.log("////////")
             let userData = await uploadAvatar(pathFile, userId);
             console.log(await checkExist(userId, 'id')) 
             return res.status(200).json({
