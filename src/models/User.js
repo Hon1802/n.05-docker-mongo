@@ -39,7 +39,7 @@ export default mongoose.model('User',
         gender:{
             type:String,
             enum:{
-                values:['male','Female'],
+                values:['Male','Female'],
                 message:'{VALUE} is not supported'
             }
         }
