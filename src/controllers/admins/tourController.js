@@ -4,7 +4,8 @@ import {
     changeStatusTour,
     handleGetTourById,
     handleGetAllTour,
-    checkExist
+    checkExist,
+    handleUpdateTourById
 } from "../../services/toursService.js" ;
 import multer from "multer";
 import fs from 'fs'
@@ -34,7 +35,41 @@ export const handleAddNew = async (req, res) =>{
         tourData
     }) 
 }
-//
+// update tour by id
+export const updateTourById = async(req, res) =>{
+    try{
+        let nameTour = req.body.name;
+        let description = req.body.description;
+        let destination = req.body.destination;
+        let region = req.body.region;
+        let duration = req.body.duration;
+        let originalPrice = req.body.originalPrice;
+        let status = req.body.status;
+        let tourId = req.body.id;
+        if( await checkExist(nameTour, 'name'))
+        {
+            return res.status(400).json({
+                errCode: 1,
+                message: 'Name tour already to use',
+            }) 
+        } else{
+            let tourData = await handleUpdateTourById(tourId, nameTour, description, destination, region, duration, originalPrice, status);
+            return res.status(tourData.status).json({
+                errCode: tourData.errCode,
+                message: tourData.errMessage,
+                tourData
+            }) 
+
+        }
+    }catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Error when update',
+        }) 
+    }
+};
+
 //update images
 export const updateImageTours = async (req, res) =>{
     try{
@@ -83,7 +118,7 @@ export const getTourById = async (req, res) => {
             let image1 = tourData.data.urlImageN1;
             let image2 = tourData.data.urlImageN2;
             let image3 = tourData.data.urlImageN3;
-            if( image1 == 'none' )
+            if( image1 == 'none' || image1 =='no image' )
             {
                 image1 = "src/public/default/tour.jpg";
             }
@@ -95,7 +130,6 @@ export const getTourById = async (req, res) => {
             {
                 image3 = "src/public/default/tour.jpg";
             }
-    
             // Example usage
             const imagePaths = [image1, image2, image3];
             const base64ImagesArray = [];
@@ -107,11 +141,12 @@ export const getTourById = async (req, res) => {
                     tourData = {
                         ...tourData.data,
                         imageBase64Array : base64ImagesArray
-                    }
+                    },
+                    tourData.status = 200
                 }
                 return res.status(tourData.status).json({
                     errCode: tourData.errCode,
-                    message: tourData.message,
+                    message: tourData.errMessage,
                     tourData
                 }) 
             })

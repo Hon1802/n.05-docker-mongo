@@ -14,6 +14,7 @@ import { handleLogin,
 import {
     handleAddNew,
     updateImageTours,
+    updateTourById,
     updateStatusTour,
     getTourById, 
     getAllTour
@@ -44,6 +45,7 @@ let initWebRoutes = (app)=>{
     router.post('/api/add-new-tour', handleAddNew);
     router.post('/api/update-images-tour', updateImageTours);
     router.post('/api/update-status-tour', updateStatusTour);
+    router.post('/api/update-tour-by-id', updateTourById);
     //ticket
     //get ticket by id
     router.get('/api/get-ticket-by-id');

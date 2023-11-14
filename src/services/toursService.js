@@ -80,23 +80,47 @@ export const handleAddNewTour = (description, name, region, duration, originalPr
 //     ])
 //     return filteredProduct
 // }
-
-// export const updateProductById = async (id, name, address) =>{
-//     const product = await Product.findById(id)
-
-//     try{
-//         product.name = name ?? product.name
-//         product.address = address ?? product.address
-//         await product.save()
-//         return product
-//     }catch(e)
-//     {
-//         return res.status(200).json({
-//             errCode: 0,
-//             message: "not update",
-//             }) 
-//     }
-// }
+export const handleUpdateTourById = (tourId, nameTour, description, destination, region, duration, originalPrice, status = 1) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let tourData = {};
+            if(checkExist(tourId))
+            {
+                const tour = await Tour.updateOne(
+                    { _id: tourId }, // Filter: Find the user with the given id
+                    { $set: { 
+                        name: nameTour,
+                        description:description,
+                        region: region,
+                        destination: destination,
+                        duration: duration,
+                        originalPrice: originalPrice,
+                        status : status,
+                     } } // Update: Set the urlAvatar field to the new path
+                  );
+                if (tour.nModified === 0) {
+                // If no user was modified, it means the user with the given id was not found
+                    tourData.status = 400;
+                    tourData.errCode = 4;
+                    tourData.errMessage = 'User not found';
+                    resolve(tourData);
+                }
+                tourData.status = 200;
+                tourData.errCode = 0; // Assuming 0 means success
+                tourData.errMessage = 'Uploaded successfully';
+                resolve(tourData);
+            } else{
+                console.log('no1111')
+            }
+        }catch(e){
+            let tourData= {};
+            tourData.status = 400;
+            tourData.errCode = 3;
+            tourData.errMessage ='Your account was not created';             
+            resolve(tourData);
+        }
+    });
+};
 
 // export const deleteProductById = async (req,res) =>{
 //     return res.status(200).json({
@@ -184,7 +208,7 @@ export const handleGetTourById = (tourId) =>{
             let isExist = await Tour.findOne({_id: tourId }).exec()        
             if(isExist)
             {   
-                tourData.status = 400;
+                tourData.status = 200;
                 tourData.errCode = 2;
                 tourData.errMessage ='Get tour by id success';
                 tourData.data = {
@@ -201,7 +225,7 @@ export const handleGetTourById = (tourId) =>{
             let tourData = {};
             tourData.status = 400;
             tourData.errCode = 3;
-            tourData.errMessage ='Your account was not created'             
+            tourData.errMessage ='Your tour was not created'             
             resolve(tourData)
         }
     })
@@ -244,6 +268,17 @@ export const checkExist = (text, types) =>{
             if(types === 'id')
             {
                 let isExist = await Tour.findOne({_id: text }).exec();
+                if(isExist)
+                {
+                    checks = true;
+                    resolve(checks);
+                } else{
+                    resolve(checks);
+                }
+            } 
+            if (types === 'name')
+            {
+                let isExist = await Tour.findOne({name: text }).exec();
                 if(isExist)
                 {
                     checks = true;
