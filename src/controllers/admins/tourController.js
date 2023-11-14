@@ -28,7 +28,7 @@ export const handleAddNew = async (req, res) =>{
         status = "1";
     }
     let tourData = await handleAddNewTour(description, nameTour, region, duration, originalPrice, destination, status);
-    return res.status(200).json({
+    return res.status(tourData.status).json({
         errCode: tourData.errCode,
         message: tourData.errMessage,
         tourData
@@ -48,7 +48,7 @@ export const updateImageTours = async (req, res) =>{
             let tourId = req.body.id;
             let paths = req.files.map(file => 'src/public/imageTour/' + file.filename);
             let tourData = await uploadImages(paths, tourId);
-            return res.status(200).json({
+            return res.status(tourData.status).json({
                 errCode: tourData.errCode,
                 message: tourData.errMessage,
                 tourData
@@ -65,7 +65,7 @@ export const updateStatusTour = async(req, res) =>{
     let tourId = req.body.id;
     let tourStatus = req.body.status;
     let tourData = await changeStatusTour(tourId, tourStatus);
-    return res.status(200).json({
+    return res.status(tourData.status).json({
         errCode: tourData.errCode,
         message: tourData.errMessage,
         tourData
@@ -109,7 +109,7 @@ export const getTourById = async (req, res) => {
                         imageBase64Array : base64ImagesArray
                     }
                 }
-                return res.status(200).json({
+                return res.status(tourData.status).json({
                     errCode: tourData.errCode,
                     message: tourData.message,
                     tourData
@@ -117,16 +117,16 @@ export const getTourById = async (req, res) => {
             })
             .catch((error) => {
                 console.error('Error:', error);
-                return res.status(200).json({
-                    errCode: 404,
-                    message: 'Black Pink',
+                return res.status(400).json({
+                    errCode: 4,
+                    message: 'Error when get tour',
                 }) 
             });
         }
     } catch(e)
     {
-        return res.status(200).json({
-            errCode: 1,
+        return res.status(400).json({
+            errCode: 3,
             message: 'Not found',
         }) 
     }
@@ -151,7 +151,7 @@ export const getAllTour = async(req, res) =>{
             }
             return item;
         });
-    return res.status(200).json({
+    return res.status(tourData.status).json({
         errCode: tourData.errCode,
         message: tourData.message,
         urlImageN1Array,

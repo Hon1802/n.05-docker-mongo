@@ -6,6 +6,7 @@ export const handleAddNewTour = (description, name, region, duration, originalPr
             let isExist = await Tour.findOne({name}).exec();            
             if(isExist)
             {   
+                tourData.status = 400;
                 tourData.errCode = 1;
                 tourData.errMessage ='Your tour was already exist'            
                 resolve(tourData)
@@ -24,6 +25,7 @@ export const handleAddNewTour = (description, name, region, duration, originalPr
                         urlImageN3: 'none',
                         status : status,
                     })
+                    tourData.status = 200;
                     tourData.errCode = 0;
                     tourData.errMessage ='Tour was create';
                     tourData.data = {
@@ -31,87 +33,77 @@ export const handleAddNewTour = (description, name, region, duration, originalPr
                     }
                     resolve(tourData)
                 } catch(e){
+                    tourData.status = 400;
                     tourData.errCode = 2;
-                    tourData.errMessage = e
+                    tourData.errMessage = 'Error when create'
                     resolve(tourData)
                 }  
             }
         }catch(e){
+            let tourData = {};
+            tourData.status = 400;
             tourData.errCode = 3;
             tourData.errMessage ='Tour was not created'             
-            rejects(tourData)
+            resolve(tourData)
         }
     })
 };
-
-
-
-export const getProductById = async (productId) =>{
-    const product = await Product.findById(productId)
-
-    if(!product){
-        //exception can't get product 
-    }
-
-    return product ?? {}
-}
-
-export const getAllProduct = async (page, size, searchString) =>{
-    //aggregate data 
-    page = parseInt(page)
-    size = parseInt(size)
-    let filteredProduct = await Product.aggregate([
-        {
-            $match:{
-                $or:[
-                    {
-                        name: {
-                            $regex: `.*${searchString}.*`, $option:'i'
-                        },
-                        email: {
-                            $regex: `.*${searchString}.*`, $option:'i'
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            $skip: (page - 1) * size
-            // $skip: 0
-        },
-        {
-            $limit: size,
-            // $limit:5
-        }
+// not completed
+// export const getAllProduct = async (page, size, searchString) =>{
+//     //aggregate data 
+//     page = parseInt(page)
+//     size = parseInt(size)
+//     let filteredProduct = await Product.aggregate([
+//         {
+//             $match:{
+//                 $or:[
+//                     {
+//                         name: {
+//                             $regex: `.*${searchString}.*`, $option:'i'
+//                         },
+//                         email: {
+//                             $regex: `.*${searchString}.*`, $option:'i'
+//                         }
+//                     }
+//                 ]
+//             }
+//         },
+//         {
+//             $skip: (page - 1) * size
+//             // $skip: 0
+//         },
+//         {
+//             $limit: size,
+//             // $limit:5
+//         }
         
-    ])
-    return filteredProduct
-}
+//     ])
+//     return filteredProduct
+// }
 
-export const updateProductById = async (id, name, address) =>{
+// export const updateProductById = async (id, name, address) =>{
+//     const product = await Product.findById(id)
 
-    const product = await Product.findById(id)
+//     try{
+//         product.name = name ?? product.name
+//         product.address = address ?? product.address
+//         await product.save()
+//         return product
+//     }catch(e)
+//     {
+//         return res.status(200).json({
+//             errCode: 0,
+//             message: "not update",
+//             }) 
+//     }
+// }
 
-    try{
-        product.name = name ?? product.name
-        product.address = address ?? product.address
-        await product.save()
-        return product
-    }catch(e)
-    {
-        return res.status(200).json({
-            errCode: 0,
-            message: "not update",
-            }) 
-    }
-}
-
-export const deleteProductById = async (req,res) =>{
-    return res.status(200).json({
-    errCode: tourData.errCode,
-    message: tourData.message,
-    }) 
-}
+// export const deleteProductById = async (req,res) =>{
+//     return res.status(200).json({
+//     errCode: tourData.errCode,
+//     message: tourData.message,
+//     }) 
+// }
 
 //upload images
 export const uploadImages = (paths, idTour) =>{
@@ -130,18 +122,21 @@ export const uploadImages = (paths, idTour) =>{
               );
             if (tour.nModified === 0) {
             // If no tour was modified, it means the tour with the given id was not found
-                tourData.errCode = 404;
+                tourData.status = 400;
+                tourData.errCode = 4;
                 tourData.errMessage = 'Tour not found';
                 resolve(tourData);
             }
-
+            tourData.status = 200;
             tourData.errCode = 0; // Assuming 0 means success
             tourData.errMessage = 'Tour uploaded successfully';
             resolve(tourData);
-        }catch(e){   
+        }catch(e){  
+            let tourData ={};
+            tourData.status = 400; 
             tourData.errCode = 3;
             tourData.errMessage ='Error uploading tour Images'             
-            rejects(tourData)
+            resolve(tourData)
         }
     })
 };
@@ -160,19 +155,23 @@ export const changeStatusTour = (tourId, status) =>{
                         status: status
                         } } // Update:
                     );
+                tourData.status = 200;
                 tourData.errCode = 0;
                 tourData.errMessage = 'Success';
                 resolve(tourData);
                 
             }else{
+                tourData.status = 400;
                 tourData.errCode = 1;
                 tourData.errMessage ='Your tour select not exist'
                 resolve(tourData)
             }
         }catch(e){
+            let tourData = {};
+            tourData.status = 400;
             tourData.errCode = 3;
             tourData.errMessage ='Error connect'
-            rejects(tourData)
+            resolve(tourData)
         }
     })
 };
@@ -185,6 +184,7 @@ export const handleGetTourById = (tourId) =>{
             let isExist = await Tour.findOne({_id: tourId }).exec()        
             if(isExist)
             {   
+                tourData.status = 400;
                 tourData.errCode = 2;
                 tourData.errMessage ='Get tour by id success';
                 tourData.data = {
@@ -192,14 +192,17 @@ export const handleGetTourById = (tourId) =>{
                 }
                 resolve(tourData)
             }else{
+                tourData.status = 400;
                 tourData.errCode = 3;
                 tourData.errMessage ='Error connect'
                 resolve(tourData) 
             }
         }catch(e){
+            let tourData = {};
+            tourData.status = 400;
             tourData.errCode = 3;
             tourData.errMessage ='Your account was not created'             
-            rejects(tourData)
+            resolve(tourData)
         }
     })
 };
@@ -212,19 +215,23 @@ export const handleGetAllTour = (tourId) =>{
             let tours = await Tour.find().exec();        
             if(tours)
             {   
+                tourData.status = 200;
                 tourData.errCode = 2;
                 tourData.errMessage ='Get tour by id success';
                 tourData.data = tours.map(tour => tour.toObject());
                 resolve(tourData)
             }else{
+                tourData.status = 400;
                 tourData.errCode = 3;
                 tourData.errMessage ='Error connect'
                 resolve(tourData) 
             }
         }catch(e){
+            let tourData = {};
+            tourData.status = 400;
             tourData.errCode = 3;
             tourData.errMessage ='Your account was not created'             
-            rejects(tourData)
+            resolve(tourData)
         }
     })
 };
