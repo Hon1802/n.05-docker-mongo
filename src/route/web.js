@@ -17,7 +17,8 @@ import {
     updateTourById,
     updateStatusTour,
     getTourById, 
-    getAllTour
+    getAllTour,
+    filterTour
 } from "../controllers/admins/tourController.js"
 
 
@@ -47,11 +48,13 @@ let initWebRoutes = (app)=>{
     router.post('/api/update-images-tour', updateImageTours);
     router.post('/api/update-status-tour', updateStatusTour);
     router.post('/api/update-tour-by-id', updateTourById);
+    // filter
+    router.get('/api/filter-tour', filterTour);
     //ticket
     //get ticket by id
     router.get('/api/get-ticket-by-id');
     router.get('/api/get-all-ticket');
-    router.post('/api/add-new-ticket');
+    router.post('/api/add-new-ticket', addNewTicket);
     router.post('/api/update-status-ticket');
     return app.use("/", router);
 }

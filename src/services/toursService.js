@@ -122,13 +122,6 @@ export const handleUpdateTourById = (tourId, nameTour, description, destination,
     });
 };
 
-// export const deleteProductById = async (req,res) =>{
-//     return res.status(200).json({
-//     errCode: tourData.errCode,
-//     message: tourData.message,
-//     }) 
-// }
-
 //upload images
 export const uploadImages = (paths, idTour) =>{
     return new Promise( async (resolve, rejects)=>{
@@ -200,7 +193,6 @@ export const changeStatusTour = (tourId, status) =>{
     })
 };
 // get by id
-
 export const handleGetTourById = (tourId) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -231,7 +223,6 @@ export const handleGetTourById = (tourId) =>{
     })
 };
 //get all tour
-
 export const handleGetAllTour = (tourId) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -257,6 +248,54 @@ export const handleGetAllTour = (tourId) =>{
             tourData.errMessage ='Your account was not created'             
             resolve(tourData)
         }
+    })
+};
+//function for filter
+export const handleFilter = (region, maximumPrice, minimumPrice, duration, from, to, name) =>{ 
+    return new Promise( async (resolve, rejects)=>{
+        // try{
+            let tourData = {};
+            let query = Tour.find();
+            // region
+            if (region) {
+                query = query.where('region').equals(region);
+            }       
+            // maximum price
+            if (maximumPrice) {
+                query = query.where('originalPrice').lte(parseInt(maximumPrice));
+            }
+            // minimum price
+            if (minimumPrice) {
+                query = query.where('originalPrice').gte(parseInt(minimumPrice));
+            }
+            // duration
+            if (duration) {
+                query = query.where('duration').equals(parseInt(duration));
+            }
+            // time
+            if (from && to) {
+                query = query.where('date').gte(new Date(from)).lte(new Date(to));
+            }
+            // name
+            if (name) {
+                query = query.where('name', new RegExp(name, 'i'));
+            }
+            const result = await query.exec(); // result not object, so need to transform to object
+            const resultsArray = Array.isArray(result) ? result : [result];
+            const transformedResults = resultsArray.map(item => item.toObject());
+            tourData.data = transformedResults;
+            tourData.status = 200;
+            tourData.errCode = 0;
+            tourData.errMessage ='Success'
+            resolve(tourData) 
+            
+        // }catch(e){
+        //     let tourData = {};
+        //     tourData.status = 400;
+        //     tourData.errCode = 3;
+        //     tourData.errMessage ='Error exe'             
+        //     resolve(tourData)
+        // }
     })
 };
 

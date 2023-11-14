@@ -5,11 +5,35 @@ import {
     handleGetTourById,
     handleGetAllTour,
     checkExist,
-    handleUpdateTourById
+    handleUpdateTourById,
+    handleFilter
 } from "../../services/toursService.js" ;
 import multer from "multer";
 import fs from 'fs'
-
+//filter
+export const filterTour = async (req, res) =>{
+    // try{
+        let region = req.body.region;
+        let maximumPrice = req.body.maximumPrice;
+        let minimumPrice = req.body.minimumPrice;
+        let duration = req.body.duration;
+        let from = req.body.from;
+        let to = req.body.to;
+        let name = req.body.name;
+        let tourData = await handleFilter(region, maximumPrice, minimumPrice,  duration, from, to, name);
+        return res.status(tourData.status).json({
+            errCode: tourData.errCode,
+            message: tourData.errMessage,
+            tourData
+        }) 
+    // }catch(e)
+    // {
+    //     return res.status(400).json({
+    //         errCode: 1,
+    //         message: 'Error when filter',
+    //     }) 
+    // }
+}
 //add new
 export const handleAddNew = async (req, res) =>{
     let nameTour = req.body.name;

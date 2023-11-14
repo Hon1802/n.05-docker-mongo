@@ -193,7 +193,7 @@ export const getById = (userId) =>{
             let userData = {};
             userData.status = 400;
             userData.errCode = 3;
-            userData.errMessage ='Your account was not created'             
+            userData.errMessage ='Your account was not created'         
             rejects(userData)
         }
     })

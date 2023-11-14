@@ -3,15 +3,7 @@ import mongoose, { Schema } from "mongoose";
 export default mongoose.model('Product',
     new Schema({
         id:{type: ObjectId},
-        budget:{
-            type: "double",
-            required:true        
-        },
         idTour:{
-            type: "ObjectId",
-            required:true        
-        },
-        idUser:{
             type: "ObjectId",
             required:true        
         },
@@ -31,6 +23,7 @@ export default mongoose.model('Product',
             type:Date,
             required:true        
         },
+        // 4 status, 0 no active, 1 active, 2 sold, 3 traveling
         status:{
             type:String,
             required:true        
