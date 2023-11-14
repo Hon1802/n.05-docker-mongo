@@ -15,8 +15,20 @@ export default mongoose.model('Tour',
             type:String,
             required:true        
         },
-        type:{
+        destination:{
             type:String,
+            required:true        
+        },
+        region:{
+            type:String,
+            required:true        
+        },
+        duration:{
+            type: Number,
+            required:true        
+        },
+        originalPrice:{
+            type: Number,
             required:true        
         },
         urlImageN1:{

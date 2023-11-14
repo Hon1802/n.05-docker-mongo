@@ -15,6 +15,14 @@ export default mongoose.model('Product',
             type: "ObjectId",
             required:true        
         },
+        childPrice:{
+            type: Number,
+            required:true        
+        },
+        adultPrice:{
+            type: Number,
+            required:true        
+        },
         departureTime:{
             type: Date,
             required:true        

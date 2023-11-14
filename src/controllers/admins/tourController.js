@@ -13,10 +13,13 @@ import fs from 'fs'
 export const handleAddNew = async (req, res) =>{
     let nameTour = req.body.name;
     let description = req.body.description;
-    let types = req.body.type;
+    let destination = req.body.destination;
+    let region = req.body.region;
+    let duration = req.body.duration;
+    let originalPrice = req.body.originalPrice;
     let status = req.body.status;
-    if (!nameTour || !description || !types){
-        return res.status(500).json({
+    if (!nameTour || !description || !region ){
+        return res.status(400).json({
             errCode: 1,
             message:"Missing inputs value"
         }) 
@@ -24,7 +27,7 @@ export const handleAddNew = async (req, res) =>{
     if(!status){
         status = "1";
     }
-    let tourData = await handleAddNewTour(description, nameTour, types, status);
+    let tourData = await handleAddNewTour(description, nameTour, region, duration, originalPrice, destination, status);
     return res.status(200).json({
         errCode: tourData.errCode,
         message: tourData.errMessage,
@@ -77,9 +80,22 @@ export const getTourById = async (req, res) => {
         if(await checkExist(tourId, 'id'))
         {
             let tourData = await handleGetTourById(tourId);
-            let image1= tourData.data.urlImageN1 || "src/public/default/avatar.jpg";
-            let image2= tourData.data.urlImageN2 || "src/public/default/avatar.jpg";
-            let image3= tourData.data.urlImageN3 || "src/public/default/avatar.jpg";
+            let image1 = tourData.data.urlImageN1;
+            let image2 = tourData.data.urlImageN2;
+            let image3 = tourData.data.urlImageN3;
+            if( image1 == 'none' )
+            {
+                image1 = "src/public/default/tour.jpg";
+            }
+            if( image2 == 'none' )
+            {
+                image2 = "src/public/default/tour.jpg";
+            }
+            if( image3 == 'none' )
+            {
+                image3 = "src/public/default/tour.jpg";
+            }
+    
             // Example usage
             const imagePaths = [image1, image2, image3];
             const base64ImagesArray = [];
@@ -126,7 +142,6 @@ export const getAllTour = async(req, res) =>{
             {
                 try {
                     item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
-                   
                 } catch (error) {
                     console.error('Error:', error);
                 }
@@ -190,10 +205,6 @@ const convertOneImage = async (urlPath) => {
         const data = await fs.readFile(urlPath);
         const base64Image = data.toString('base64');
         return base64Image;
-    // } catch (error) {
-    //     console.error(error);
-    //     throw 'Internal Server Error';
-    // }
 };
 // const convertOneImage = (urlPath) => {
 //     return new Promise((resolve, reject) => {

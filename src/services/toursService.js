@@ -1,5 +1,5 @@
 import { Tour } from "../models/index.js"
-export const handleAddNewTour = (description, name, types, status) =>{
+export const handleAddNewTour = (description, name, region, duration, originalPrice, destination, status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
@@ -15,11 +15,14 @@ export const handleAddNewTour = (description, name, types, status) =>{
                     const newTour = await Tour.create({
                         name: name,
                         description:description,
-                        type: types,
+                        region: region,
+                        destination: destination,
+                        duration: duration,
+                        originalPrice: originalPrice,
                         urlImageN1: 'none',
                         urlImageN2: 'none',
                         urlImageN3: 'none',
-                        status : '1',
+                        status : status,
                     })
                     tourData.errCode = 0;
                     tourData.errMessage ='Tour was create';
