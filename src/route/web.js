@@ -20,7 +20,8 @@ import {
     getAllTour,
     filterTour
 } from "../controllers/admins/tourController.js"
-
+import {addNewTicket}
+from "../controllers/admins/ticketController.js"
 
 let router = express.Router();
 let initWebRoutes = (app)=>{

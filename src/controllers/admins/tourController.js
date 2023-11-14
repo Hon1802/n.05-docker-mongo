@@ -12,7 +12,7 @@ import multer from "multer";
 import fs from 'fs'
 //filter
 export const filterTour = async (req, res) =>{
-    // try{
+    try{
         let region = req.body.region;
         let maximumPrice = req.body.maximumPrice;
         let minimumPrice = req.body.minimumPrice;
@@ -26,13 +26,13 @@ export const filterTour = async (req, res) =>{
             message: tourData.errMessage,
             tourData
         }) 
-    // }catch(e)
-    // {
-    //     return res.status(400).json({
-    //         errCode: 1,
-    //         message: 'Error when filter',
-    //     }) 
-    // }
+    }catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Error when filter',
+        }) 
+    }
 }
 //add new
 export const handleAddNew = async (req, res) =>{

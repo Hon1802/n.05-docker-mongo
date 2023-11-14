@@ -253,7 +253,7 @@ export const handleGetAllTour = (tourId) =>{
 //function for filter
 export const handleFilter = (region, maximumPrice, minimumPrice, duration, from, to, name) =>{ 
     return new Promise( async (resolve, rejects)=>{
-        // try{
+        try{
             let tourData = {};
             let query = Tour.find();
             // region
@@ -289,13 +289,13 @@ export const handleFilter = (region, maximumPrice, minimumPrice, duration, from,
             tourData.errMessage ='Success'
             resolve(tourData) 
             
-        // }catch(e){
-        //     let tourData = {};
-        //     tourData.status = 400;
-        //     tourData.errCode = 3;
-        //     tourData.errMessage ='Error exe'             
-        //     resolve(tourData)
-        // }
+        }catch(e){
+            let tourData = {};
+            tourData.status = 400;
+            tourData.errCode = 3;
+            tourData.errMessage ='Error exe'             
+            resolve(tourData)
+        }
     })
 };
 
