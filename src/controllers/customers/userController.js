@@ -113,8 +113,9 @@ export const getUserById = async (req, res) => {
             fs.readFile(imagePath, async (err, data)  => {
                 if (err) {
                     console.log(err)
-                  return res.status(500).send('Internal Server Error');
+                  return res.status(400).send('Internal Server Error');
                 }
+                userData.status = 400;
                 // Trans from image to Base64
                 base64Image = data.toString('base64');
                 if(userData.errCode == 2)
@@ -122,9 +123,10 @@ export const getUserById = async (req, res) => {
                     userData = {
                         ...userData.data,
                         avatarBase64 : base64Image,
-                    }
+                    };
+                    userData.status = 200;
                 }
-                return res.status(200).json({
+                return res.status(userData.status).json({
                     errCode: userData.errCode,
                     message: userData.message,
                     userData
@@ -134,7 +136,7 @@ export const getUserById = async (req, res) => {
         }
     } catch(e)
     {
-        return res.status(200).json({
+        return res.status(400).json({
             errCode: 1,
             message: 'Not found',
         }) 

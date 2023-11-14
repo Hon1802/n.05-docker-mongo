@@ -42,6 +42,7 @@ let initWebRoutes = (app)=>{
     //get tour by id
     router.get('/api/get-tour-by-id',getTourById );
     router.get('/api/get-all-tours', getAllTour);
+    router.get('/api/filter-tours-by-price', getAllTour);
     router.post('/api/add-new-tour', handleAddNew);
     router.post('/api/update-images-tour', updateImageTours);
     router.post('/api/update-status-tour', updateStatusTour);

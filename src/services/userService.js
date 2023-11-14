@@ -179,15 +179,19 @@ export const getById = (userId) =>{
                 userData.errMessage ='Get user by id success';
                 userData.data = {
                     ...isExist.toObject(),
-                    password:'Not show', 
-                }
+                    password:'Not show'    
+                };
+                userData.status = 200;
                 resolve(userData)
             }else{
+                userData.status = 400;
                 userData.errCode = 3;
                 userData.errMessage ='Error connect'
                 resolve(userData) 
             }
         }catch(e){
+            let userData = {};
+            userData.status = 400;
             userData.errCode = 3;
             userData.errMessage ='Your account was not created'             
             rejects(userData)
