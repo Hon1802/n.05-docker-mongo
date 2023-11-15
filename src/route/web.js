@@ -52,13 +52,15 @@ let initWebRoutes = (app)=>{
     router.post('/api/update-status-tour', updateStatusTour);
     router.post('/api/update-tour-by-id', updateTourById);
     // Customer
-    router.get('/api/filter-tour', filterTour);
+    router.post('/api/filter-tour', filterTour);
     //ticket
     //get ticket by id
-    router.get('/api/get-ticket-by-id');
-    router.get('/api/get-all-ticket');
+    router.post('/api/get-ticket-by-id');
+    router.post('/api/get-all-ticket');
     router.post('/api/add-new-ticket', addNewTicket);
     router.post('/api/update-status-ticket');
+    
+
     return app.use("/", router);
 }
 

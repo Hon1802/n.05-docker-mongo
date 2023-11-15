@@ -1,4 +1,5 @@
-
+import multer from "multer";
+import fs from 'fs'
 import {
     handleFilter
 } from "../../services/toursService.js" ;
@@ -16,16 +17,22 @@ export const filterTour = async (req, res) =>{
         const urlImageN1Array = tourData.data.map(async (item) => 
         {
             let imagePaths = item.urlImageN1;
-            if( imagePaths !== 'none')
+            if( imagePaths == 'none' || imagePaths =='no image')
             {
+                let tempImagePaths = "src/public/default/tour.jpg";
                 try {
-                    item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
+                    item.urlImageN1 = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
                 } catch (error) {
                     console.error('Error:', error);
                 }
             }
             else {
-                item.urlImageN1 = 'no image';
+                
+                try {
+                    item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
+                } catch (error) {
+                    console.error('Error:', error);
+                }
             }
             return item;
         });

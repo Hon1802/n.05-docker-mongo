@@ -1,4 +1,4 @@
-import { Tour } from "../models/index.js"
+import { Ticket, Tour } from "../models/index.js"
 export const handleAddNewTour = (description, name, region, category, duration, originalPrice, destination, status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -255,15 +255,27 @@ export const handleGetAllTour = (tourId) =>{
 //function for filter
 export const handleFilter = (region, category, maximumPrice, minimumPrice, duration, from, to, name) =>{ 
     return new Promise( async (resolve, rejects)=>{
-        try{
+        // try{
             let tourData = {};
             let query = Tour.find();
+            let queryTicket = Ticket.find();
+            //
+            // time
+            if (from && to) {
+                queryTicket = queryTicket.where('departureTime').gte(new Date(from)).lte(new Date(to));
+                let resultTicket = await queryTicket.exec(); // result not object, so need to transform to object
+                const resultsArray1 = Array.isArray(resultTicket) ? resultTicket : [resultTicket];
+                const transformedResults1 = resultsArray1.map(item => item.toObject());
+                transformedResults1.forEach(result => {
+                    console.log('Transformed Result idTour:', result.idTour);
+                });
+            }
             // region
             if (region) {
                 query = query.where('region').equals(region);
-            }   
+            }    
             // category
-            if (category) {
+            if (category) { 
                 query = query.where('category').equals(category);
             }      
             // maximum price
@@ -278,10 +290,7 @@ export const handleFilter = (region, category, maximumPrice, minimumPrice, durat
             if (duration) {
                 query = query.where('duration').equals(parseInt(duration));
             }
-            // time
-            if (from && to) {
-                query = query.where('date').gte(new Date(from)).lte(new Date(to));
-            }
+            
             // name
             if (name) {
                 query = query.where('name', new RegExp(name, 'i'));
@@ -295,13 +304,13 @@ export const handleFilter = (region, category, maximumPrice, minimumPrice, durat
             tourData.errMessage ='Success'
             resolve(tourData) 
             
-        }catch(e){
-            let tourData = {};
-            tourData.status = 400;
-            tourData.errCode = 3;
-            tourData.errMessage ='Error exe'             
-            resolve(tourData)
-        }
+        // }catch(e){
+        //     let tourData = {};
+        //     tourData.status = 400;
+        //     tourData.errCode = 3;
+        //     tourData.errMessage ='Error exe'             
+        //     resolve(tourData)
+        // }
     })
 };
 
