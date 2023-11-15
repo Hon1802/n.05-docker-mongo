@@ -261,7 +261,13 @@ export const handleFilter = (region, category, maximumPrice, minimumPrice, durat
             let queryTicket = Ticket.find();
             //
             // time
-            if (from && to) {
+            if (from ) {
+                if(!to)
+                {
+                    // to = new Date();
+                    const currentDate = new Date();
+                    to = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(currentDate);
+                }
                 queryTicket = queryTicket.where('departureTime').gte(new Date(from)).lte(new Date(to));
                 let resultTicket = await queryTicket.exec(); // result not object, so need to transform to object
                 const resultsArray1 = Array.isArray(resultTicket) ? resultTicket : [resultTicket];
@@ -273,7 +279,7 @@ export const handleFilter = (region, category, maximumPrice, minimumPrice, durat
             // region
             if (region) {
                 query = query.where('region').equals(region);
-            }    
+            }     
             // category
             if (category) { 
                 query = query.where('category').equals(category);
