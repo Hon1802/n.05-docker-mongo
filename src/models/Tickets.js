@@ -1,6 +1,6 @@
 import { ObjectId } from "bson";
 import mongoose, { Schema } from "mongoose";
-export default mongoose.model('Product',
+export default mongoose.model('Ticket',
     new Schema({
         id:{type: ObjectId},
         idTour:{

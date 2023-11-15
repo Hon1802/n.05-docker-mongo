@@ -13,29 +13,33 @@ export const filterTour = async (req, res) =>{
         let to = req.body.to;
         let name = req.body.name;
         let category = req.body.category;
+        let urlImageN1Array = {};
         let tourData = await handleFilter(region, category, maximumPrice, minimumPrice, duration, from, to, name);
-        const urlImageN1Array = tourData.data.map(async (item) => 
+        if(tourData.data == {})
         {
-            let imagePaths = item.urlImageN1;
-            if( imagePaths == 'none' || imagePaths =='no image')
+            urlImageN1Array = tourData.data.map(async (item) => 
             {
-                let tempImagePaths = "src/public/default/tour.jpg";
-                try {
-                    item.urlImageN1 = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
-                } catch (error) {
-                    console.error('Error:', error);
+                let imagePaths = item.urlImageN1;
+                if( imagePaths == 'none' || imagePaths =='no image')
+                {
+                    let tempImagePaths = "src/public/default/tour.jpg";
+                    try {
+                        item.urlImageN1 = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
                 }
-            }
-            else {
-                
-                try {
-                    item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
-                } catch (error) {
-                    console.error('Error:', error);
+                else {
+                    
+                    try {
+                        item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
                 }
-            }
-            return item;
-        });
+                return item;
+            });
+        }
         return res.status(tourData.status).json({
             errCode: tourData.errCode,
             message: tourData.errMessage,

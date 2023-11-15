@@ -255,27 +255,12 @@ export const handleGetAllTour = (tourId) =>{
 //function for filter
 export const handleFilter = (region, category, maximumPrice, minimumPrice, duration, from, to, name) =>{ 
     return new Promise( async (resolve, rejects)=>{
-        // try{
+        try{
             let tourData = {};
             let query = Tour.find();
             let queryTicket = Ticket.find();
+            let transformedResults1 = {};
             //
-            // time
-            if (from ) {
-                if(!to)
-                {
-                    // to = new Date();
-                    const currentDate = new Date();
-                    to = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(currentDate);
-                }
-                queryTicket = queryTicket.where('departureTime').gte(new Date(from)).lte(new Date(to));
-                let resultTicket = await queryTicket.exec(); // result not object, so need to transform to object
-                const resultsArray1 = Array.isArray(resultTicket) ? resultTicket : [resultTicket];
-                const transformedResults1 = resultsArray1.map(item => item.toObject());
-                transformedResults1.forEach(result => {
-                    console.log('Transformed Result idTour:', result.idTour);
-                });
-            }
             // region
             if (region) {
                 query = query.where('region').equals(region);
@@ -301,22 +286,54 @@ export const handleFilter = (region, category, maximumPrice, minimumPrice, durat
             if (name) {
                 query = query.where('name', new RegExp(name, 'i'));
             }
+            
+            
+            // time
+            if (from ) {
+                if(!to)
+                {
+                    // to = new Date();
+                    const currentDate = new Date();
+                    to = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(currentDate);
+                }
+                queryTicket = queryTicket.where('departureTime').gte(new Date(from)).lte(new Date(to));
+                let resultTicket = await queryTicket.exec(); // result not object, so need to transform to object
+                const resultsArray1 = Array.isArray(resultTicket) ? resultTicket : [resultTicket];
+                transformedResults1 = resultsArray1.map(item => item.toObject());
+                console.log(transformedResults1.length)
+                if(transformedResults1.length === 0) {
+                    console.log('ư')
+                    tourData.status = 200;
+                    tourData.data = {};
+                    tourData.errCode = 0;
+                    tourData.errMessage ='Success'
+                    resolve(tourData) 
+                } else{
+                    transformedResults1.forEach(result => {
+                        // category
+                        query = query.where('_id').equals(result.idTour);
+                        console.log('Transformed Result idTour:', result.idTour);
+                    });
+                }
+            }
+        
             const result = await query.exec(); // result not object, so need to transform to object
             const resultsArray = Array.isArray(result) ? result : [result];
             const transformedResults = resultsArray.map(item => item.toObject());
+            
             tourData.data = transformedResults;
             tourData.status = 200;
             tourData.errCode = 0;
             tourData.errMessage ='Success'
             resolve(tourData) 
             
-        // }catch(e){
-        //     let tourData = {};
-        //     tourData.status = 400;
-        //     tourData.errCode = 3;
-        //     tourData.errMessage ='Error exe'             
-        //     resolve(tourData)
-        // }
+        }catch(e){
+            let tourData = {};
+            tourData.status = 400;
+            tourData.errCode = 3;
+            tourData.errMessage ='Error exe'             
+            resolve(tourData)
+        }
     })
 };
 
