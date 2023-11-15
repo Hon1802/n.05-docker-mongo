@@ -23,7 +23,8 @@ export const handleAddNewTicket = (tourId, childPrice, adultPrice, departureTime
                         ...newTicket._doc
                     }
                     resolve(ticketData)
-                } catch(e){
+                } catch(e){ 
+                    console.log(e)
                     ticketData.status = 400;
                     ticketData.errCode = 2;
                     ticketData.errMessage = 'Error when create'

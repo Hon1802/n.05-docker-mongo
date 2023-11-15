@@ -17,11 +17,13 @@ import {
     updateTourById,
     updateStatusTour,
     getTourById, 
-    getAllTour,
-    filterTour
+    getAllTour
 } from "../controllers/admins/tourController.js"
 import {addNewTicket}
 from "../controllers/admins/ticketController.js"
+import {
+    filterTour}
+from "../controllers/customers/customerController.js"
 
 let router = express.Router();
 let initWebRoutes = (app)=>{
@@ -37,19 +39,19 @@ let initWebRoutes = (app)=>{
     router.post('/api/logout', handleLogOut);
     router.post('/api/upload-avatar', updateAvatar);
     router.post('/api/update-password', updateNewPassword); 
-    router.get('/api/personal', getUserById);
+    router.post('/api/personal', getUserById);
     router.post('/api/update-by-id', updateInfoById);
     router.post('/api/delete-account', deleteUserById);
     //tour
     //get tour by id
-    router.get('/api/get-tour-by-id',getTourById );
-    router.get('/api/get-all-tours', getAllTour);
-    router.get('/api/filter-tours-by-price', getAllTour);
+    router.post('/api/get-tour-by-id',getTourById );
+    router.post('/api/get-all-tours', getAllTour);
+    router.post('/api/filter-tours-by-price', getAllTour);
     router.post('/api/add-new-tour', handleAddNew);
     router.post('/api/update-images-tour', updateImageTours);
     router.post('/api/update-status-tour', updateStatusTour);
     router.post('/api/update-tour-by-id', updateTourById);
-    // filter
+    // Customer
     router.get('/api/filter-tour', filterTour);
     //ticket
     //get ticket by id

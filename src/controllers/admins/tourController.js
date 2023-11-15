@@ -14,13 +14,14 @@ import fs from 'fs'
 export const filterTour = async (req, res) =>{
     try{
         let region = req.body.region;
+        let category = req.body.category;
         let maximumPrice = req.body.maximumPrice;
         let minimumPrice = req.body.minimumPrice;
         let duration = req.body.duration;
         let from = req.body.from;
         let to = req.body.to;
         let name = req.body.name;
-        let tourData = await handleFilter(region, maximumPrice, minimumPrice,  duration, from, to, name);
+        let tourData = await handleFilter(region, category, maximumPrice, minimumPrice,  duration, from, to, name);
         return res.status(tourData.status).json({
             errCode: tourData.errCode,
             message: tourData.errMessage,
@@ -40,6 +41,7 @@ export const handleAddNew = async (req, res) =>{
     let description = req.body.description;
     let destination = req.body.destination;
     let region = req.body.region;
+    let category = req.body.category;
     let duration = req.body.duration;
     let originalPrice = req.body.originalPrice;
     let status = req.body.status;
@@ -52,7 +54,7 @@ export const handleAddNew = async (req, res) =>{
     if(!status){
         status = "1";
     }
-    let tourData = await handleAddNewTour(description, nameTour, region, duration, originalPrice, destination, status);
+    let tourData = await handleAddNewTour(description, nameTour, region, category, duration, originalPrice, destination, status);
     return res.status(tourData.status).json({
         errCode: tourData.errCode,
         message: tourData.errMessage,
@@ -66,6 +68,7 @@ export const updateTourById = async(req, res) =>{
         let description = req.body.description;
         let destination = req.body.destination;
         let region = req.body.region;
+        let category = req.body.category;
         let duration = req.body.duration;
         let originalPrice = req.body.originalPrice;
         let status = req.body.status;
@@ -77,7 +80,7 @@ export const updateTourById = async(req, res) =>{
                 message: 'Name tour already to use',
             }) 
         } else{
-            let tourData = await handleUpdateTourById(tourId, nameTour, description, destination, region, duration, originalPrice, status);
+            let tourData = await handleUpdateTourById(tourId, nameTour, description, destination, region, category, duration, originalPrice, status);
             return res.status(tourData.status).json({
                 errCode: tourData.errCode,
                 message: tourData.errMessage,
@@ -175,7 +178,7 @@ export const getTourById = async (req, res) => {
                 }) 
             })
             .catch((error) => {
-                console.error('Error:', error);
+                // console.error('Error:', error);
                 return res.status(400).json({
                     errCode: 4,
                     message: 'Error when get tour',
@@ -239,7 +242,7 @@ const convertImage = async (urlPaths) => {
 
         return base64Images;
     } catch (error) {
-        console.error('Error:', error);
+        // console.error('Error:', error);
         throw 'Internal Server Error';
     }
 };
@@ -247,7 +250,7 @@ const readFileAsync = (urlPath) => {
     return new Promise((resolve, reject) => {
         fs.readFile(urlPath, (err, data) => {
             if (err) {
-                console.log(err);
+                // console.log(err);
                 reject('Internal Server Error');
             } else {
                 // Convert data to Base64

@@ -1,5 +1,5 @@
 import { Tour } from "../models/index.js"
-export const handleAddNewTour = (description, name, region, duration, originalPrice, destination, status = 1) =>{
+export const handleAddNewTour = (description, name, region, category, duration, originalPrice, destination, status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
@@ -17,6 +17,7 @@ export const handleAddNewTour = (description, name, region, duration, originalPr
                         name: name,
                         description:description,
                         region: region,
+                        category: category,
                         destination: destination,
                         duration: duration,
                         originalPrice: originalPrice,
@@ -80,7 +81,7 @@ export const handleAddNewTour = (description, name, region, duration, originalPr
 //     ])
 //     return filteredProduct
 // }
-export const handleUpdateTourById = (tourId, nameTour, description, destination, region, duration, originalPrice, status = 1) =>{
+export const handleUpdateTourById = (tourId, nameTour, description, destination, region, category, duration, originalPrice, status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
@@ -92,6 +93,7 @@ export const handleUpdateTourById = (tourId, nameTour, description, destination,
                         name: nameTour,
                         description:description,
                         region: region,
+                        category: category,
                         destination: destination,
                         duration: duration,
                         originalPrice: originalPrice,
@@ -251,7 +253,7 @@ export const handleGetAllTour = (tourId) =>{
     })
 };
 //function for filter
-export const handleFilter = (region, maximumPrice, minimumPrice, duration, from, to, name) =>{ 
+export const handleFilter = (region, category, maximumPrice, minimumPrice, duration, from, to, name) =>{ 
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
@@ -259,7 +261,11 @@ export const handleFilter = (region, maximumPrice, minimumPrice, duration, from,
             // region
             if (region) {
                 query = query.where('region').equals(region);
-            }       
+            }   
+            // category
+            if (category) {
+                query = query.where('category').equals(category);
+            }      
             // maximum price
             if (maximumPrice) {
                 query = query.where('originalPrice').lte(parseInt(maximumPrice));

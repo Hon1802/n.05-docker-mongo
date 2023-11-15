@@ -89,7 +89,7 @@ export const updateAvatar = async (req, res) =>{
             let userId = req.body.id;
             let pathFile = 'src/public/imageUser/' + pathName;
             let userData = await uploadAvatar(pathFile, userId);
-            console.log(await checkExist(userId, 'id')) 
+
             return res.status(200).json({
                 errCode: userData.errCode,
                 message: userData.errMessage,
@@ -98,21 +98,26 @@ export const updateAvatar = async (req, res) =>{
         }); 
     } catch(e)
     {
-        console.log(e)
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
     } 
 }
 // get user by id
 export const getUserById = async (req, res) => {
-    try{
+    // try{
         let userId = req.body.id;
         if(await checkExist(userId, 'id'))
         {
             let userData = await getById(userId);
-            const imagePath = userData.data.urlAvatar || "src/public/default/avatar.jpg";
+            let imagePath = userData.data.urlAvatar;
+            if (imagePath == 'none' || imagePath == "no image") {
+                imagePath = 'src/public/default/avatar.jpg';
+            };
             let base64Image = '';
             fs.readFile(imagePath, async (err, data)  => {
                 if (err) {
-                    console.log(err)
                   return res.status(400).send('Internal Server Error');
                 }
                 userData.status = 400;
@@ -134,13 +139,13 @@ export const getUserById = async (req, res) => {
             });
             
         }
-    } catch(e)
-    {
-        return res.status(400).json({
-            errCode: 1,
-            message: 'Not found',
-        }) 
-    }
+    // } catch(e)
+    // {
+    //     return res.status(400).json({
+    //         errCode: 1,
+    //         message: 'Not found',
+    //     }) 
+    // }
 }
 // update information by id
 export const updateInfoById = async (req, res) => {

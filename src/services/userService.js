@@ -171,6 +171,7 @@ export const uploadAvatar = (path, idUser) =>{
 export const getById = (userId) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
+            
             let userData = {};
             let isExist = await User.findOne({_id: userId }).exec()        
             if(isExist)

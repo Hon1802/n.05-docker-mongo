@@ -4,7 +4,7 @@ export default mongoose.model('Product',
     new Schema({
         id:{type: ObjectId},
         idTour:{
-            type: "ObjectId",
+            type: String,
             required:true        
         },
         childPrice:{
