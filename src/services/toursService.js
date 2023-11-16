@@ -1,5 +1,5 @@
 import { Ticket, Tour } from "../models/index.js"
-export const handleAddNewTour = (description, name, region, category, duration, originalPrice, destination, status = 1) =>{
+export const handleAddNewTour = (description, name, region, category, duration, originalPrice,childPrice, adultPrice, destination, status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
@@ -21,6 +21,8 @@ export const handleAddNewTour = (description, name, region, category, duration, 
                         destination: destination,
                         duration: duration,
                         originalPrice: originalPrice,
+                        childPrice: childPrice, 
+                        adultPrice: adultPrice,
                         urlImageN1: 'none',
                         urlImageN2: 'none',
                         urlImageN3: 'none',
@@ -81,7 +83,7 @@ export const handleAddNewTour = (description, name, region, category, duration, 
 //     ])
 //     return filteredProduct
 // }
-export const handleUpdateTourById = (tourId, nameTour, description, destination, region, category, duration, originalPrice, status = 1) =>{
+export const handleUpdateTourById = (tourId, nameTour, description, destination, region, category, duration, originalPrice, childPrice, adultPrice, status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
@@ -96,6 +98,8 @@ export const handleUpdateTourById = (tourId, nameTour, description, destination,
                         category: category,
                         destination: destination,
                         duration: duration,
+                        childPrice: childPrice, 
+                        adultPrice: adultPrice,
                         originalPrice: originalPrice,
                         status : status,
                      } } // Update: Set the urlAvatar field to the new path

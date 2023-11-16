@@ -35,6 +35,14 @@ export default mongoose.model('Tour',
             type: Number,
             required:true        
         },
+        childPrice:{
+            type: Number,
+            required:true        
+        },
+        adultPrice:{
+            type: Number,
+            required:true        
+        },
         urlImageN1:{
             type:String
         },

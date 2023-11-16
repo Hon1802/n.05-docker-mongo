@@ -99,7 +99,7 @@ export const handleUserRegister = (fullName, address, email,password, phone, gen
             {   
                 userData.status = 409;
                 userData.errCode = 3;
-                userData.errMessage = 'Username already exists';
+                userData.errMessage = 'Email exists';
                 resolve(userData)
 
             }else{
