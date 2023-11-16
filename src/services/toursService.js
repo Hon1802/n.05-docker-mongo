@@ -304,7 +304,7 @@ export const handleFilter = (region, category, maximumPrice, minimumPrice, durat
                 if(transformedResults1.length === 0) {
                     console.log('ư')
                     tourData.status = 200;
-                    tourData.data = {};
+                    tourData.data = [];
                     tourData.errCode = 0;
                     tourData.errMessage ='Success'
                     resolve(tourData) 
