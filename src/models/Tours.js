@@ -43,14 +43,6 @@ export default mongoose.model('Tour',
             type: Number,
             required:true        
         },
-        departureTime:{
-            type: Date,
-            required:true        
-        },        
-        returnTime:{
-            type:Date,
-            required:true        
-        },
         urlImageN1:{
             type:String
         },

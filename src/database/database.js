@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 let connect = async(MONGO_URI)=>{
     try{
+        console.log(MONGO_URI);
+        console.log("asdas")
         const connection = await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
         console.log('connect successfully')
     } catch(error){

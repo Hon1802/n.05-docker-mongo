@@ -9,6 +9,9 @@ import checkToken from "./authentication/auth.js"
 import dotenv from 'dotenv';
 import cors from 'cors'
 
+import { upload } from "./addDataTour.js"
+
+
 dotenv.config();
 let app = express();
 // environment
@@ -23,6 +26,8 @@ app.use(bodyParser.json());
 connect(mongoURL);
 viewEngine(app);
 initWebRoutes(app);
+
+upload();
 
 app.listen(port, () =>{
     console.log('run on : ' + port);

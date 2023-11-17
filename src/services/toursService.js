@@ -11,8 +11,6 @@ export const handleAddNewTour = (
     displayPrice,
     childPrice, 
     adultPrice, 
-    departureTime,
-    returnTime,
     status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -36,8 +34,6 @@ export const handleAddNewTour = (
                         displayPrice: displayPrice,
                         childPrice: childPrice, 
                         adultPrice: adultPrice, 
-                        departureTime : departureTime,
-                        returnTime : returnTime,
                         urlImageN1: 'none', 
                         urlImageN2: 'none',
                         urlImageN3: 'none',
@@ -53,8 +49,9 @@ export const handleAddNewTour = (
                 } catch(e){
                     tourData.status = 400;
                     tourData.errCode = 2;
-                    tourData.errMessage = 'Error when create'
-                    resolve(tourData)
+                    tourData.errMessage = 'Error when create';
+                    tourData.errMsg = e;
+                    resolve(tourData);
                 }  
             }
         }catch(e){
