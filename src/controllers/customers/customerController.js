@@ -1,7 +1,8 @@
 import multer from "multer";
 import fs from 'fs'
 import {
-    handleFilter
+    handleFilter,
+    getLastTour
 } from "../../services/toursService.js" ;
 export const filterTour = async (req, res) =>{
     try{
@@ -12,9 +13,15 @@ export const filterTour = async (req, res) =>{
         let from = req.body.from;
         let to = req.body.to;
         let name = req.body.name;
-        let category = req.body.category;
         let urlImageN1Array = {};
-        let tourData = await handleFilter(region, category, maximumPrice, minimumPrice, duration, from, to, name);
+        let tourData = await handleFilter(
+            region, 
+            maximumPrice, 
+            minimumPrice, 
+            duration, 
+            from, 
+            to, 
+            name);
         if(tourData.data == {})
         {
             urlImageN1Array = tourData.data.map(async (item) => 
@@ -51,6 +58,23 @@ export const filterTour = async (req, res) =>{
         return res.status(400).json({
             errCode: 1,
             message: 'Error when filter',
+        }) 
+    }
+}
+
+export const latestTour = async (req, res) =>{
+    try{
+        let tourData = await getLastTour();
+        return res.status(tourData.status).json({
+            errCode: tourData.errCode,
+            message: tourData.errMessage,
+            tourData
+        }) 
+    }catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Error when get',
         }) 
     }
 }

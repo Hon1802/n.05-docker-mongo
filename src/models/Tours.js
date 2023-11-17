@@ -1,4 +1,8 @@
 import { ObjectId } from "bson";
+import { utcToZonedTime } from 'date-fns-tz'
+// Lấy thời gian hiện tại và chuyển về múi giờ mong muốn
+const now = new Date();
+
 import mongoose, { Schema } from "mongoose";
 export default mongoose.model('Tour',
     new Schema({
@@ -23,15 +27,11 @@ export default mongoose.model('Tour',
             type:String,
             required:true        
         },
-        category:{
-            type:String,
-            required:true        
-        },
         duration:{
             type: Number,
             required:true        
         },
-        originalPrice:{
+        displayPrice:{
             type: Number,
             required:true        
         },
@@ -41,6 +41,14 @@ export default mongoose.model('Tour',
         },
         adultPrice:{
             type: Number,
+            required:true        
+        },
+        departureTime:{
+            type: Date,
+            required:true        
+        },        
+        returnTime:{
+            type:Date,
             required:true        
         },
         urlImageN1:{
@@ -55,7 +63,8 @@ export default mongoose.model('Tour',
         status:{
             type:String,
             required:true        
-        }
+        },
+        updatedAt: { type: Date, default: utcToZonedTime(now, 'Asia/Ho_Chi_Minh') }
     },{
         autoCreate: false,
         autoIndex: true

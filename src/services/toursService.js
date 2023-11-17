@@ -1,5 +1,19 @@
 import { Ticket, Tour } from "../models/index.js"
-export const handleAddNewTour = (description, name, region, category, duration, originalPrice,childPrice, adultPrice, destination, status = 1) =>{
+import { utcToZonedTime } from 'date-fns-tz'
+const now = new Date();
+// Lấy thời gian hiện tại và chuyển về múi giờ mong muốn
+export const handleAddNewTour = (
+    name, 
+    description, 
+    destination, 
+    region, 
+    duration, 
+    displayPrice,
+    childPrice, 
+    adultPrice, 
+    departureTime,
+    returnTime,
+    status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
@@ -8,7 +22,7 @@ export const handleAddNewTour = (description, name, region, category, duration, 
             {   
                 tourData.status = 400;
                 tourData.errCode = 1;
-                tourData.errMessage ='Your tour was already exist'            
+                tourData.errMessage ='No exist, try again'            
                 resolve(tourData)
             }else{
                 try {
@@ -16,14 +30,15 @@ export const handleAddNewTour = (description, name, region, category, duration, 
                     const newTour = await Tour.create({
                         name: name,
                         description:description,
-                        region: region,
-                        category: category,
                         destination: destination,
+                        region: region,
                         duration: duration,
-                        originalPrice: originalPrice,
+                        displayPrice: displayPrice,
                         childPrice: childPrice, 
-                        adultPrice: adultPrice,
-                        urlImageN1: 'none',
+                        adultPrice: adultPrice, 
+                        departureTime : departureTime,
+                        returnTime : returnTime,
+                        urlImageN1: 'none', 
                         urlImageN2: 'none',
                         urlImageN3: 'none',
                         status : status,
@@ -51,39 +66,20 @@ export const handleAddNewTour = (description, name, region, category, duration, 
         }
     })
 };
-// not completed
-// export const getAllProduct = async (page, size, searchString) =>{
-//     //aggregate data 
-//     page = parseInt(page)
-//     size = parseInt(size)
-//     let filteredProduct = await Product.aggregate([
-//         {
-//             $match:{
-//                 $or:[
-//                     {
-//                         name: {
-//                             $regex: `.*${searchString}.*`, $option:'i'
-//                         },
-//                         email: {
-//                             $regex: `.*${searchString}.*`, $option:'i'
-//                         }
-//                     }
-//                 ]
-//             }
-//         },
-//         {
-//             $skip: (page - 1) * size
-//             // $skip: 0
-//         },
-//         {
-//             $limit: size,
-//             // $limit:5
-//         }
-        
-//     ])
-//     return filteredProduct
-// }
-export const handleUpdateTourById = (tourId, nameTour, description, destination, region, category, duration, originalPrice, childPrice, adultPrice, status = 1) =>{
+
+export const handleUpdateTourById = (
+    tourId, 
+    nameTour, 
+    description, 
+    destination, 
+    region, 
+    duration, 
+    displayPrice,
+    childPrice, 
+    adultPrice, 
+    departureTime,
+    returnTime,
+    status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
@@ -95,12 +91,14 @@ export const handleUpdateTourById = (tourId, nameTour, description, destination,
                         name: nameTour,
                         description:description,
                         region: region,
-                        category: category,
                         destination: destination,
                         duration: duration,
+                        displayPrice: displayPrice,
                         childPrice: childPrice, 
                         adultPrice: adultPrice,
-                        originalPrice: originalPrice,
+                        departureTime : departureTime,
+                        returnTime : returnTime,
+                        updatedAt : utcToZonedTime(now, 'Asia/Ho_Chi_Minh'),
                         status : status,
                      } } // Update: Set the urlAvatar field to the new path
                   );
@@ -257,29 +255,31 @@ export const handleGetAllTour = (tourId) =>{
     })
 };
 //function for filter
-export const handleFilter = (region, category, maximumPrice, minimumPrice, duration, from, to, name) =>{ 
+export const handleFilter = (
+    region,  
+    maximumPrice, 
+    minimumPrice, 
+    duration, 
+    from, 
+    to, 
+    name) =>{ 
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
             let query = Tour.find();
-            let queryTicket = Ticket.find();
-            let transformedResults1 = {};
+            let queryDate = Tour.find();
             //
             // region
             if (region) {
                 query = query.where('region').equals(region);
-            }     
-            // category
-            if (category) { 
-                query = query.where('category').equals(category);
-            }      
+            }          
             // maximum price
             if (maximumPrice) {
-                query = query.where('originalPrice').lte(parseInt(maximumPrice));
+                query = query.where('displayPrice').lte(parseInt(maximumPrice));
             }
             // minimum price
             if (minimumPrice) {
-                query = query.where('originalPrice').gte(parseInt(minimumPrice));
+                query = query.where('displayPrice').gte(parseInt(minimumPrice));
             }
             // duration
             if (duration) {
@@ -290,47 +290,51 @@ export const handleFilter = (region, category, maximumPrice, minimumPrice, durat
             if (name) {
                 query = query.where('name', new RegExp(name, 'i'));
             }
-            
-            
+    
             // time
             if (from ) {
+                
                 if(!to)
                 {
                     // to = new Date();
                     const currentDate = new Date();
                     to = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(currentDate);
+                    // let newTo = new Date(to + 1 * 24 * 60 * 60 * 1000);
                 }
-                queryTicket = queryTicket.where('departureTime').gte(new Date(from)).lte(new Date(to));
-                let resultTicket = await queryTicket.exec(); // result not object, so need to transform to object
-                const resultsArray1 = Array.isArray(resultTicket) ? resultTicket : [resultTicket];
-                transformedResults1 = resultsArray1.map(item => item.toObject());
-                console.log(transformedResults1.length)
-                if(transformedResults1.length === 0) {
-                    console.log('ư')
+                
+                // console.log(newTo)
+                queryDate = query.where('departureTime').gte(new Date(from)).lte(new Date(to));
+                let resultDate = await queryDate.exec(); // result not object, so need to transform to object
+                let resultsArray = Array.isArray(resultDate) ? resultDate : [resultDate];
+                let transformedResults = resultsArray.map(item => item.toObject());
+                if(transformedResults.length === 0) {
                     tourData.status = 200;
                     tourData.data = [];
                     tourData.errCode = 0;
                     tourData.errMessage ='Success'
                     resolve(tourData) 
                 } else{
-                    transformedResults1.forEach(result => {
+                    transformedResults.forEach(result => {
                         // category
-                        query = query.where('_id').equals(result.idTour);
-                        console.log('Transformed Result idTour:', result.idTour);
+                        query = query.where('_id').equals(result._id);
+                        console.log('Transformed Result idTour:', result._id);
+                        tourData.data = transformedResults;
+                        tourData.status = 200;
+                        tourData.errCode = 0;
+                        tourData.errMessage ='Success'
+                        resolve(tourData) 
                     });
                 }
+            } else{
+                let result = await query.exec(); // result not object, so need to transform to object
+                let resultsArray = Array.isArray(result) ? result : [result];
+                let transformedResults = resultsArray.map(item => item.toObject());
+                tourData.data = transformedResults;
+                tourData.status = 200;
+                tourData.errCode = 0;
+                tourData.errMessage ='Success'
+                resolve(tourData) 
             }
-        
-            const result = await query.exec(); // result not object, so need to transform to object
-            const resultsArray = Array.isArray(result) ? result : [result];
-            const transformedResults = resultsArray.map(item => item.toObject());
-            
-            tourData.data = transformedResults;
-            tourData.status = 200;
-            tourData.errCode = 0;
-            tourData.errMessage ='Success'
-            resolve(tourData) 
-            
         }catch(e){
             let tourData = {};
             tourData.status = 400;
@@ -374,3 +378,28 @@ export const checkExist = (text, types) =>{
         }
     })
 };
+
+
+//function
+export const getLastTour = () =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let tourData = {};
+            const recentTours = await Tour.find()
+            .sort({updateAt: -1 }) // Sắp xếp theo trường updatedAt giảm dần (ngày gần nhất đến xa nhất)
+            .limit(5); // Giới hạn kết quả trả về thành 5 đối tượng
+            tourData.data = recentTours;
+            tourData.status = 200;
+            tourData.errCode = 0;
+            tourData.errMessage ='Success'             
+            resolve(tourData)
+        }catch(e){
+            let tourData = {};
+            tourData.data =[];
+            tourData.status = 400;
+            tourData.errCode = 3;
+            tourData.errMessage ='Error exe'             
+            resolve(tourData)
+        }
+    })
+}
