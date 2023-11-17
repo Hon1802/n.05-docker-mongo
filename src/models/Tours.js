@@ -61,7 +61,7 @@ export default mongoose.model('Tour',
             type:String
         },
         status:{
-            type:String,
+            type:Number,
             required:true        
         },
         updatedAt: { type: Date, default: utcToZonedTime(now, 'Asia/Ho_Chi_Minh') }

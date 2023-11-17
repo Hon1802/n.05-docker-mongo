@@ -22,7 +22,9 @@ import {
 import {addNewTicket}
 from "../controllers/admins/ticketController.js"
 import {
-    filterTour}
+    filterTour,
+    latestTour
+}
 from "../controllers/customers/customerController.js"
 
 let router = express.Router();
@@ -53,6 +55,8 @@ let initWebRoutes = (app)=>{
     router.post('/api/update-tour-by-id', updateTourById);
     // Customer
     router.post('/api/filter-tour', filterTour);
+    router.post('/api/hot-tour', filterTour);
+    router.get('/api/latest-tour', latestTour);
     //ticket
     //get ticket by id
     router.post('/api/get-ticket-by-id');
