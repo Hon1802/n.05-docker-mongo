@@ -74,12 +74,14 @@ export const handleHotTour = () =>{
                             as: 'bookings'
                         }
                     },
-                    
                     {
                         $addFields: {
                             bookingsCount: { $size: '$bookings' },
                           
                         }
+                    },
+                    {
+                        $limit: 10,
                     },
                     {
                         $project: {
@@ -96,7 +98,7 @@ export const handleHotTour = () =>{
                     }
                     ]);
                 
-                console.log('Tours with booking counts:', toursWithCounts);
+                // console.log('Tours with booking counts:', toursWithCounts);
 
                 bookingData.status = 200;
                 bookingData.errCode = 0;
