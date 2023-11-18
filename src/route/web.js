@@ -8,7 +8,9 @@ import { handleLogin,
          getUserById,
          updateInfoById,
          deleteUserById,
-         updateNewPassword
+         updateNewPassword,
+         handlePayment,
+         handleBooking
         } 
     from "../controllers/customers/userController.js" ;
 import {
@@ -23,7 +25,8 @@ import {addNewTicket}
 from "../controllers/admins/ticketController.js"
 import {
     filterTour,
-    latestTour
+    latestTour,
+    hotTour
 }
 from "../controllers/customers/customerController.js"
 
@@ -57,6 +60,11 @@ let initWebRoutes = (app)=>{
     router.post('/api/filter-tour', filterTour);
     router.post('/api/hot-tour', filterTour);
     router.get('/api/latest-tour', latestTour);
+    //Booking
+    router.post('/api/create-booking', handleBooking);
+    router.get('/api/hot-tour', hotTour);
+    router.post('/api/create-payment', handlePayment);
+
     //ticket
     //get ticket by id
     router.post('/api/get-ticket-by-id');
