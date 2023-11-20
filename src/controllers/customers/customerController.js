@@ -68,6 +68,33 @@ export const filterTour = async (req, res) =>{
 export const latestTour = async (req, res) =>{
     try{
         let tourData = await getLastTour();
+
+        if(tourData.data == {})
+        {
+            urlImageN1Array = tourData.data.map(async (item) => 
+            {
+                let imagePaths = item.urlImageN1;
+                if( imagePaths == 'none' || imagePaths =='no image')
+                {
+                    let tempImagePaths = "src/public/default/tour.jpg";
+                    try {
+                        item.urlImageN1 = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+                else {
+                    
+                    try {
+                        item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+                return item;
+            });
+        }
+
         return res.status(tourData.status).json({
             errCode: tourData.errCode,
             message: tourData.errMessage,
@@ -84,6 +111,31 @@ export const latestTour = async (req, res) =>{
 export const hotTour = async (req, res) =>{
     try{
         let tourData = await handleHotTour();
+        if(tourData.data == {})
+        {
+            urlImageN1Array = tourData.data.map(async (item) => 
+            {
+                let imagePaths = item.urlImageN1;
+                if( imagePaths == 'none' || imagePaths =='no image')
+                {
+                    let tempImagePaths = "src/public/default/tour.jpg";
+                    try {
+                        item.urlImageN1 = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+                else {
+                    
+                    try {
+                        item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+                return item;
+            });
+        }
         return res.status(tourData.status).json({
             errCode: tourData.errCode,
             message: tourData.errMessage,

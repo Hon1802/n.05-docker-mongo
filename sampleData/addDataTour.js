@@ -16,7 +16,8 @@ export const upload = async() => {
 }
 
 async function uploadEach(item) {
-    return await handleAddNewTour(item.name, 
+    return await handleAddNewTour(
+        item.name, 
         item.description, 
         item.destination, 
         item.region, 
@@ -24,7 +25,7 @@ async function uploadEach(item) {
         item.displayPrice,
         item.childPrice, 
         item.adultPrice, 
-        item.departureDate,
-        item.returnDate,
+        item.departureTime,
+        item.returnTime,
         item.status)
 }
