@@ -25,7 +25,7 @@ connect(mongoURL);
 viewEngine(app);
 initWebRoutes(app);
 
-if(true)
+if(false)
 {
     upload();
     console.log('upload success');

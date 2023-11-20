@@ -236,7 +236,6 @@ export const handlePayment = async (req, res) =>{
         method, 
         totalPrice,
         note);
-
     return res.status(userData.status).json({
         errCode: userData.errCode,
         message: userData.errMessage,
@@ -247,14 +246,36 @@ export const handleBooking = async (req, res) =>{
     let tourId = req.body.tourId;
     let userId = req.body.userId;
     let paymentId = req.body.paymentId;
+    let arrayChild = req.body.arrayChild;
+    let arrayAdult = req.body.arrayAdult;
+    if(arrayChild)
+    {
+        arrayChild = JSON.parse(arrayChild);
+    }
+    if(arrayAdult)
+    {
+        arrayAdult = JSON.parse(arrayAdult);
+    }
+    let nTicketAdult = arrayAdult ? arrayAdult.length : 0;
+    let nTicketChild = arrayChild ? arrayChild.length : 0;
+    // if (Array.isArray(arrayAdult)) {
+    //     arrayAdult.forEach(obj => {
+    //       console.log(`Name: ${obj.firstName} ${obj.lastName}, Gender: ${obj.gender}`);
+    //     });
+    //     res.status(200).json({ message: 'Received and processed the adult list' });
+    //   } else {
+    //     res.status(200).json({message: 'Invalid data format - expecting an array' });
+    //   }
+     
+    console.log(arrayAdult);
+    console.log(arrayChild);
+    // let userData = await handleAddNewBooking(tourId, 
+    //     userId,  
+    //     paymentId);
 
-    let userData = await handleAddNewBooking(tourId, 
-        userId, 
-        paymentId);
-
-    return res.status(userData.status).json({
-        errCode: userData.errCode,
-        message: userData.errMessage,
-        userData
-    }) 
+    // return res.status(userData.status).json({
+    //     errCode: userData.errCode, 
+    //     message: userData.errMessage,
+    //     userData
+    // }) 
 }

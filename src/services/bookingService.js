@@ -86,11 +86,11 @@ export const handleHotTour = () =>{
                     {
                         $project: {
                             _id: 1,
-                
                             name: 1, // Add other fields from Tour you want to retrieve
                             description: 1,
                             // Include the bookingsCount field
-                            bookingsCount: 1
+                            urlImageN1: 1,
+                            bookingsCount: 1,
                         }
                     },
                     {

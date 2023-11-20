@@ -111,9 +111,7 @@ export const latestTour = async (req, res) =>{
 export const hotTour = async (req, res) =>{
     try{
         let tourData = await handleHotTour();
-        if(tourData.data == {})
-        {
-            urlImageN1Array = tourData.data.map(async (item) => 
+            const urlImageN1Array = tourData.data.map(async (item) => 
             {
                 let imagePaths = item.urlImageN1;
                 if( imagePaths == 'none' || imagePaths =='no image')
@@ -135,10 +133,10 @@ export const hotTour = async (req, res) =>{
                 }
                 return item;
             });
-        }
         return res.status(tourData.status).json({
             errCode: tourData.errCode,
             message: tourData.errMessage,
+            urlImageN1Array,
             tourData
         }) 
     }catch(e)
