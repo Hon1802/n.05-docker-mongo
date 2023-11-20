@@ -1,18 +1,23 @@
 import { ObjectId } from "bson";
 import mongoose, { Schema } from "mongoose";
-export default mongoose.model('Ticket',
+import { utcToZonedTime } from 'date-fns-tz'
+// Lấy thời gian hiện tại và chuyển về múi giờ mong muốn
+const now = new Date();
+export default mongoose.model('Booking',
     new Schema({
         id:{type: ObjectId},
         idTour:{
             type: ObjectId,
             required:true        
         },
-        departureTime:{
-            type: Date,
+        idUser:
+        {
+            type: ObjectId,
             required:true        
-        },        
-        returnTime:{
-            type:Date,
+        }
+        ,        
+        idPayment:{
+            type: ObjectId,
             required:true        
         },
         // 4 status, 0 no active, 1 active, 2 sold, 3 traveling
@@ -20,6 +25,8 @@ export default mongoose.model('Ticket',
             type:String,
             required:true        
         }
+        ,
+        updatedAt: { type: Date, default: utcToZonedTime(now, 'Asia/Ho_Chi_Minh') }
     },{
         autoCreate: false,
         autoIndex: true

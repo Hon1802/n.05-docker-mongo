@@ -20,7 +20,8 @@ export const handleAddNewTour = (
             {   
                 tourData.status = 400;
                 tourData.errCode = 1;
-                tourData.errMessage ='No exist, try again'            
+                tourData.errMessage ='Exist, try again with another name'            
+                console.log('try again with another name')
                 resolve(tourData)
             }else{
                 try {
@@ -45,13 +46,14 @@ export const handleAddNewTour = (
                     tourData.data = {
                         ...newTour._doc
                     }
+                    console.log('Tour was create')
                     resolve(tourData)
                 } catch(e){
                     tourData.status = 400;
                     tourData.errCode = 2;
-                    tourData.errMessage = 'Error when create';
-                    tourData.errMsg = e;
-                    resolve(tourData);
+                    tourData.errMessage = 'Error when create'
+                    console.log('Error when create', e)
+                    resolve(tourData)
                 }  
             }
         }catch(e){

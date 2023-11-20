@@ -17,6 +17,8 @@ import fs from 'fs'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import multer from "multer";
+import { handleAddNewPayment } from "../../services/paymentService.js";
+import { handleAddNewBooking } from "../../services/bookingService.js";
 //login
 export const handleLogin = async (req,res) =>{
     let email = req.body.email;
@@ -221,3 +223,38 @@ const storage = multer.diskStorage({
   });
 export const upload = multer({ storage });
 
+//payment
+
+export const handlePayment = async (req, res) =>{
+    let tourId = req.body.tourId;
+    let userId = req.body.userId;
+    let method = req.body.method;
+    let totalPrice = req.body.totalPrice;
+    let note = req.body.note;
+    let userData = await handleAddNewPayment(tourId, 
+        userId, 
+        method, 
+        totalPrice,
+        note);
+
+    return res.status(userData.status).json({
+        errCode: userData.errCode,
+        message: userData.errMessage,
+        userData
+    }) 
+}
+export const handleBooking = async (req, res) =>{
+    let tourId = req.body.tourId;
+    let userId = req.body.userId;
+    let paymentId = req.body.paymentId;
+
+    let userData = await handleAddNewBooking(tourId, 
+        userId, 
+        paymentId);
+
+    return res.status(userData.status).json({
+        errCode: userData.errCode,
+        message: userData.errMessage,
+        userData
+    }) 
+}

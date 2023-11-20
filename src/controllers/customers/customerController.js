@@ -4,6 +4,9 @@ import {
     handleFilter,
     getLastTour
 } from "../../services/toursService.js" ;
+import {
+    handleHotTour
+} from "../../services/bookingService.js" ;
 export const filterTour = async (req, res) =>{
     try{
         let region = req.body.region;
@@ -65,6 +68,22 @@ export const filterTour = async (req, res) =>{
 export const latestTour = async (req, res) =>{
     try{
         let tourData = await getLastTour();
+        return res.status(tourData.status).json({
+            errCode: tourData.errCode,
+            message: tourData.errMessage,
+            tourData
+        }) 
+    }catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Error when get',
+        }) 
+    }
+}
+export const hotTour = async (req, res) =>{
+    try{
+        let tourData = await handleHotTour();
         return res.status(tourData.status).json({
             errCode: tourData.errCode,
             message: tourData.errMessage,
