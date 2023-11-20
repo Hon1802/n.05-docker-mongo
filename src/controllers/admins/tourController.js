@@ -6,44 +6,21 @@ import {
     handleGetAllTour,
     checkExist,
     handleUpdateTourById,
-    handleFilter
 } from "../../services/toursService.js" ;
 import multer from "multer";
 import fs from 'fs'
-//filter
-export const filterTour = async (req, res) =>{
-    try{
-        let region = req.body.region;
-        let category = req.body.category;
-        let maximumPrice = req.body.maximumPrice;
-        let minimumPrice = req.body.minimumPrice;
-        let duration = req.body.duration;
-        let from = req.body.from;
-        let to = req.body.to;
-        let name = req.body.name;
-        let tourData = await handleFilter(region, category, maximumPrice, minimumPrice,  duration, from, to, name);
-        return res.status(tourData.status).json({
-            errCode: tourData.errCode,
-            message: tourData.errMessage,
-            tourData
-        }) 
-    }catch(e)
-    {
-        return res.status(400).json({
-            errCode: 1,
-            message: 'Error when filter',
-        }) 
-    }
-}
 //add new
 export const handleAddNew = async (req, res) =>{
     let nameTour = req.body.name;
     let description = req.body.description;
     let destination = req.body.destination;
     let region = req.body.region;
-    let category = req.body.category;
     let duration = req.body.duration;
-    let originalPrice = req.body.originalPrice;
+    let displayPrice = req.body.displayPrice;
+    let childPrice = req.body.childPrice;
+    let adultPrice = req.body.adultPrice;
+    let departureTime = req.body.departureTime;
+    let returnTime = req.body.returnTime;
     let status = req.body.status;
     if (!nameTour || !description || !region ){
         return res.status(400).json({
@@ -54,7 +31,17 @@ export const handleAddNew = async (req, res) =>{
     if(!status){
         status = "1";
     }
-    let tourData = await handleAddNewTour(description, nameTour, region, category, duration, originalPrice, destination, status);
+    let tourData = await handleAddNewTour(nameTour, 
+                                        description, 
+                                        destination, 
+                                        region, 
+                                        duration, 
+                                        displayPrice, 
+                                        childPrice, 
+                                        adultPrice,
+                                        departureTime,
+                                        returnTime, 
+                                        status);
     return res.status(tourData.status).json({
         errCode: tourData.errCode,
         message: tourData.errMessage,
@@ -64,15 +51,18 @@ export const handleAddNew = async (req, res) =>{
 // update tour by id
 export const updateTourById = async(req, res) =>{
     try{
+        let tourId = req.body.id;
         let nameTour = req.body.name;
         let description = req.body.description;
         let destination = req.body.destination;
         let region = req.body.region;
-        let category = req.body.category;
         let duration = req.body.duration;
-        let originalPrice = req.body.originalPrice;
+        let displayPrice = req.body.displayPrice;
+        let childPrice = req.body.childPrice;
+        let adultPrice = req.body.adultPrice;
+        let departureTime = req.body.departureTime;
+        let returnTime = req.body.returnTime;
         let status = req.body.status;
-        let tourId = req.body.id;
         if( await checkExist(nameTour, 'name'))
         {
             return res.status(400).json({
@@ -80,7 +70,19 @@ export const updateTourById = async(req, res) =>{
                 message: 'Name tour already to use',
             }) 
         } else{
-            let tourData = await handleUpdateTourById(tourId, nameTour, description, destination, region, category, duration, originalPrice, status);
+            let tourData = await handleUpdateTourById(
+                tourId, 
+                nameTour, 
+                description, 
+                destination, 
+                region, 
+                duration, 
+                displayPrice, 
+                childPrice, 
+                adultPrice, 
+                departureTime,
+                returnTime,
+                status);
             return res.status(tourData.status).json({
                 errCode: tourData.errCode,
                 message: tourData.errMessage,

@@ -25,7 +25,7 @@ export default async function checkToken(req, res, next) {
         const isExpired = Date.now() >= jwtObject.exp * 1000
         if(isExpired)
         {
-            res.status(403).json({
+            res.status(400).json({
                 errCode: 1,
                 message: "token is expired",
             }) 
@@ -38,7 +38,7 @@ export default async function checkToken(req, res, next) {
                 next()
             }
             else {
-                res.status(403).json({
+                res.status(400).json({
                     errCode: 1,
                     message: "token is expired",
                 }) 
@@ -47,7 +47,7 @@ export default async function checkToken(req, res, next) {
         }
         debugger
     }catch(e){
-        res.status(401).json({
+        res.status(400).json({
             errCode: 1,
             message: "Not match token",
         }) 

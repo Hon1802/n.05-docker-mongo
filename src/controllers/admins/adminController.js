@@ -60,8 +60,6 @@ let deleteCustomer = async (req,res) =>{
     }) 
 }
 
-
-
 //Statistical
 let statisticalByDay = async (req,res) =>{
     return res.status(200).json({
@@ -85,7 +83,6 @@ let statisticalByMon = async (req,res) =>{
 }
 
 module.exports ={
-
     getAllCustomer:getAllCustomer,
     getCustomerById:getCustomerById,
     editCustomer:editCustomer,
