@@ -24,5 +24,7 @@ async function uploadEach(item) {
         item.displayPrice,
         item.childPrice, 
         item.adultPrice, 
+        item.departureDate,
+        item.returnDate,
         item.status)
 }
