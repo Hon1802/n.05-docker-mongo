@@ -1,22 +1,27 @@
 import { Tour, Booking, Payment } from "../models/index.js";
+import { mongoose } from "mongoose";
 export const handleAddNewBooking = (
     tourId, 
-    userId, 
-    paymentId, 
+    userId,  
+    children,
+    adult,
+    nChildren,
+    nAdult,
     status = 1
     ) =>{
     return new Promise( async (resolve, rejects)=>{
-        try{
+        // try{
             let bookingData = {};
-            let isExist = await Payment.findOne({_id: paymentId }).exec();            
-            if(isExist)
-            {   
+              
                 try {
                     //insert db
                     const newBooking = await Booking.create({
-                        idTour: tourId,
-                        idUser: userId,
-                        idPayment: paymentId,
+                        idTour: new mongoose.Types.ObjectId(tourId),
+                        idUser: new mongoose.Types.ObjectId(userId),
+                        children: children,
+                        adult: adult,
+                        nChildren: nChildren,
+                        nAdult: nAdult,
                         status : status,
                     })
                     bookingData.status = 200;
@@ -33,19 +38,14 @@ export const handleAddNewBooking = (
                     bookingData.errMessage = 'Error when create'
                     resolve(bookingData)
                 }  
-            }else{
-                tourData.status = 400;
-                tourData.errCode = 1;
-                tourData.errMessage ='Not payment'            
-                resolve(tourData)
-            }
-        }catch(e){
-            let bookingData = {};
-            bookingData.status = 400;
-            bookingData.errCode = 3;
-            bookingData.errMessage ='booking was not created'             
-            resolve(bookingData)
-        }
+            
+        // }catch(e){
+        //     let bookingData = {};
+        //     bookingData.status = 400;
+        //     bookingData.errCode = 3;
+        //     bookingData.errMessage ='booking was not created'             
+        //     resolve(bookingData)
+        // }
     })
 };
 

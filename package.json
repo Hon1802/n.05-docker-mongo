@@ -11,6 +11,7 @@
   "author": "VanHonNguyen",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -22,6 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.4.5",
     "multer": "^1.4.5-lts.1",
+    "paypal-rest-sdk": "^1.8.1",
     "validator": "^13.11.0"
   },
   "devDependencies": {

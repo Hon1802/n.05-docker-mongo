@@ -9,8 +9,6 @@ import { handleLogin,
          updateInfoById,
          deleteUserById,
          updateNewPassword,
-         handlePayment,
-         handleBooking
         } 
     from "../controllers/customers/userController.js" ;
 import {
@@ -29,7 +27,11 @@ import {
     hotTour
 }
 from "../controllers/customers/customerController.js"
-
+import {handlePayment,
+    handleBooking,
+    handleCheckBooking
+}
+    from "../controllers/customers/paymentController.js"
 let router = express.Router();
 let initWebRoutes = (app)=>{
     router.get('/', (req,res)=>{
@@ -62,6 +64,7 @@ let initWebRoutes = (app)=>{
     router.get('/api/latest-tour', latestTour);
     //Booking
     router.post('/api/create-booking', handleBooking);
+    router.post('/api/check-booking', handleCheckBooking);
     router.get('/api/hot-tour', hotTour);
     router.post('/api/create-payment', handlePayment);
 
