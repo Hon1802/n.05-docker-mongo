@@ -54,20 +54,27 @@ export const handleCheckBooking = async (tourId,
     let paymentInfo = await verifyPayment(paymentId,auth.data.access_token);
     if(paymentInfo)
     {
-      let paymentSource = paymentInfo.payment_source;
-      let payer = paymentInfo.payer; 
-      let update_time = paymentInfo.update_time;
-      let status = 1;
-      let userData = await handleAddNewPayment(
-                                              tourId, 
-                                              userId, 
-                                              paymentId, 
-                                              paymentSource, 
-                                              payer,
-                                              totalPrice,
-                                              status = 1,
-                                              update_time)
-      return true;
+      if(paymentInfo.status == "COMPLETED")
+      {
+        console.log(paymentInfo.status)
+        let paymentSource = paymentInfo.payment_source;
+        let payer = paymentInfo.payer; 
+        let update_time = paymentInfo.update_time;
+        let status = 1;
+        let userData = await handleAddNewPayment(
+                                                tourId, 
+                                                userId, 
+                                                paymentId, 
+                                                paymentSource, 
+                                                payer,
+                                                totalPrice,
+                                                status = 1,
+                                                update_time)
+        return true;
+      }
+      else{
+        return false;
+      }
     } else{
       return false;
     }
@@ -138,6 +145,7 @@ const verifyPayment = async(paymentId, accessToken) =>{
     };
     try {
       const response = await axios.get(`https://api.sandbox.paypal.com/v2/checkout/orders/${paymentId}`, config);
+      
       return response.data;
     } catch (error) {
       throw error;
