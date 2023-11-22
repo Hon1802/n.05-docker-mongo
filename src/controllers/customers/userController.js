@@ -92,7 +92,7 @@ export const updateAvatar = async (req, res) =>{
             let pathFile = 'src/public/imageUser/' + pathName;
             let userData = await uploadAvatar(pathFile, userId);
 
-            return res.status(200).json({
+            return res.status(userData.status).json({
                 errCode: userData.errCode,
                 message: userData.errMessage,
                 userData
@@ -108,7 +108,7 @@ export const updateAvatar = async (req, res) =>{
 }
 // get user by id
 export const getUserById = async (req, res) => {
-    // try{
+    try{
         let userId = req.body.id;
         if(await checkExist(userId, 'id'))
         {
@@ -141,30 +141,31 @@ export const getUserById = async (req, res) => {
             });
             
         }
-    // } catch(e)
-    // {
-    //     return res.status(400).json({
-    //         errCode: 1,
-    //         message: 'Not found',
-    //     }) 
-    // }
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
 }
 // update information by id
 export const updateInfoById = async (req, res) => {
     try {
         let userId = req.body.id;
+        let nameUser = req.body.nameUser;
         let address = req.body.address;
         let phone = req.body.phone;
         let gender = req.body.gender;
-        let userData = await updateById(userId, address, phone, gender);
-        return res.status(200).json({
+        let userData = await updateById(userId, nameUser, address, phone, gender);
+        return res.status(userData.status).json({
             errCode: userData.errCode,
             message: userData.message,
             userData
         }) 
     } catch(e)
     {
-        return res.status(200).json({
+        return res.status(400).json({
             errCode: 1,
             message: 'Not found',
         }) 
@@ -178,14 +179,14 @@ export const updateNewPassword = async (req, res) => {
         let newPassword = req.body.newPassword;
         
         let userData = await updatePassword(userId, oldPassword, newPassword);
-        return res.status(200).json({
+        return res.status(userData.status).json({
             errCode: userData.errCode,
             message: userData.message,
             userData
         }) 
     } catch(e)
     {
-        return res.status(200).json({
+        return res.status(400).json({
             errCode: 1,
             message: 'Not found',
         }) 
@@ -197,14 +198,14 @@ export const deleteUserById = async (req, res) => {
         let userId = req.body.id;
         let password = req.body.password;
         let userData = await changeStatusUser(userId, password);
-        return res.status(200).json({
+        return res.status(userData.status).json({
             errCode: userData.errCode,
             message: userData.message,
             userData
         }) 
     } catch(e)
     {
-        return res.status(200).json({
+        return res.status(400).json({
             errCode: 1,
             message: 'Not found',
         }) 
@@ -223,59 +224,3 @@ const storage = multer.diskStorage({
   });
 export const upload = multer({ storage });
 
-//payment
-
-export const handlePayment = async (req, res) =>{
-    let tourId = req.body.tourId;
-    let userId = req.body.userId;
-    let method = req.body.method;
-    let totalPrice = req.body.totalPrice;
-    let note = req.body.note;
-    let userData = await handleAddNewPayment(tourId, 
-        userId, 
-        method, 
-        totalPrice,
-        note);
-    return res.status(userData.status).json({
-        errCode: userData.errCode,
-        message: userData.errMessage,
-        userData
-    }) 
-}
-export const handleBooking = async (req, res) =>{
-    let tourId = req.body.tourId;
-    let userId = req.body.userId;
-    let paymentId = req.body.paymentId;
-    let arrayChild = req.body.arrayChild;
-    let arrayAdult = req.body.arrayAdult;
-    if(arrayChild)
-    {
-        arrayChild = JSON.parse(arrayChild);
-    }
-    if(arrayAdult)
-    {
-        arrayAdult = JSON.parse(arrayAdult);
-    }
-    let nTicketAdult = arrayAdult ? arrayAdult.length : 0;
-    let nTicketChild = arrayChild ? arrayChild.length : 0;
-    // if (Array.isArray(arrayAdult)) {
-    //     arrayAdult.forEach(obj => {
-    //       console.log(`Name: ${obj.firstName} ${obj.lastName}, Gender: ${obj.gender}`);
-    //     });
-    //     res.status(200).json({ message: 'Received and processed the adult list' });
-    //   } else {
-    //     res.status(200).json({message: 'Invalid data format - expecting an array' });
-    //   }
-     
-    console.log(arrayAdult);
-    console.log(arrayChild);
-    // let userData = await handleAddNewBooking(tourId, 
-    //     userId,  
-    //     paymentId);
-
-    // return res.status(userData.status).json({
-    //     errCode: userData.errCode, 
-    //     message: userData.errMessage,
-    //     userData
-    // }) 
-}

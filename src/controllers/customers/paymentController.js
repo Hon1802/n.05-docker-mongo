@@ -27,6 +27,7 @@ export const handleBooking = async (req, res) =>{
     {
       let userData = await handleAddNewBooking(tourId, 
                                                 userId,
+                                                paymentId,
                                                 arrayChild,
                                                 arrayAdult, 
                                                 nTicketChild,

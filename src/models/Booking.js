@@ -14,7 +14,12 @@ export default mongoose.model('Booking',
         {
             type: ObjectId,
             required:true        
-        },        
+        },   
+        idPayment:
+        {
+            type: String,
+            require: true
+        },     
         children:[{ 
             firstName: String,
             lastName: String,
