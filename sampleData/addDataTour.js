@@ -1,7 +1,7 @@
 import { handleAddNewTour } from "../src/services/toursService.js";
 import * as data from "./tour.json" assert { type: "json" };
 
-export const upload = async() => { 
+export const uploadTour = async() => { 
     for (var i = 0; i < data.default.length; i++)
     {
         try {

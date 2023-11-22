@@ -1,0 +1,83 @@
+[
+        {
+                "id": 1,
+                "name": "Nguyễn Tùng Châu",
+                "mail": "chautung152444@gmail.com",
+                "password": "password",
+                "phoneNumber": "0194941315",
+                "address": "18 Str. 25-4, Bach Dang Ward, Quang Ninh, Ha Long City, Vietnam",
+                "gender": "Male"
+        },
+        {
+                "id": 2,
+                "name": "Nguyễn Duy Cường",
+                "mail": "cuongnguyen162198@gmail.com",
+                "password": "password",
+                "phoneNumber": "0925219653",
+                "address": "168/29 Dang Van Ngu St., Ward 14, Phu Nhuan Dist., Ho Chi Minh City, Vietnam",
+                "gender": "Male"
+        },
+        {
+                "id": 3,
+                "name": "Nguyễn Anh Hoàng",
+                "mail": "hoanganh256135@gmail.com",
+                "password": "password",
+                "phoneNumber": "0816546135",
+                "address": "320 Ben Van Don Street, Ward 2, District 4, Ho Chi Minh City, Vietnam",
+                "gender": "Male"
+        },
+        {
+                "id": 4,
+                "name": "Jack Birkin",
+                "mail": "jackson864664@gmail.com",
+                "password": "password",
+                "phoneNumber": "04890220001",
+                "address": "142 Cregagh Rd., Belfast, County Antrim, Ireland",
+                "gender": "Male"
+        },
+        {
+                "id": 5,
+                "name": "Hồ Mai Hiền",
+                "mail": "maihien215216@gmail.com",
+                "password": "password",
+                "phoneNumber": "0948533116",
+                "address": "",
+                "gender": "Female"
+        },
+        {
+                "id": 6,
+                "name": "Jenny Horton",
+                "mail": "thaongo145563@gmail.com",
+                "password": "password",
+                "phoneNumber": "07767694780",
+                "address": "35 Wood Lane, Bainsford, United Kingdom",
+                "gender": "Female"
+        },
+        {
+                "id": 7,
+                "name": "Võ Ðăng Khánh",
+                "mail": "khanhdang526565@gmail.com",
+                "password": "password",
+                "phoneNumber": "0815865689",
+                "address": "10 Nguyen Van Tre, Ward 1, Cao Lanh Town, Dong Thap",
+                "gender": "Male"
+        },
+        {
+                "id": 8,
+                "name": "Sam Fisher",
+                "mail": "samuelf523123@gmail.com",
+                "password": "password",
+                "phoneNumber": "0646643371",
+                "address": "2735 Morningview Lane, Lineville, Iowa, United States",
+                "gender": "Male"
+        },
+        {
+                "id": 9,
+                "name": "Phạm Việt Ngọc",
+                "mail": "phamngoc798196@gmail.com",
+                "password": "password",
+                "phoneNumber": "0813156561",
+                "address": "185 Tran Hung Dao Street, My Binh Ward, Long Xuyen City, An Giang, Vietnam",
+                "gender": "Male"
+        }
+]

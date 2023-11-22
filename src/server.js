@@ -2,7 +2,8 @@ import bodyParser from "body-parser"
 import express from "express"
 import viewEngine from "./config/viewEngine.js"
 import initWebRoutes from "./route/web.js"
-import { upload } from "../sampleData/addDataTour.js"
+import { uploadTour } from "../sampleData/addDataTour.js"
+import { uploadUser } from "../sampleData/addDataUser.js"
 
 import connect from "./database/database.js"
 import checkToken from "./authentication/auth.js"
@@ -13,6 +14,7 @@ dotenv.config();
 let app = express();
 // environment
 import { port, mongoURL} from "./config/main.js";
+
 //check token
 app.use(checkToken);
 app.use(cors());
@@ -27,7 +29,8 @@ initWebRoutes(app);
 
 if(true)
 {
-    upload();
+    uploadTour();
+    uploadUser();
     console.log('upload success');
 }
 app.listen(port, () =>{
