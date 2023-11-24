@@ -349,6 +349,17 @@ export const checkExist = (text, types) =>{
                 } else{
                     resolve(checks);
                 }
+            } else if (types ==='idGG')
+            {
+                let isExist = await User.findOne({idGoogle: text}).exec(); 
+                console.log(isExist);
+                if(isExist)
+                {
+                    checks = true;
+                    resolve(checks);
+                } else{
+                    resolve(checks);
+                }
             }
         }catch(e){    
             checks = 0;          

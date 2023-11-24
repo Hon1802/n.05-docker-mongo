@@ -1,7 +1,7 @@
 import { ObjectId } from "bson";
 import mongoose, { Schema } from "mongoose";
 import { utcToZonedTime } from 'date-fns-tz'
-// Lấy thời gian hiện tại và chuyển về múi giờ mong muốn
+// 
 const now = new Date();
 export default mongoose.model('Booking',
     new Schema({

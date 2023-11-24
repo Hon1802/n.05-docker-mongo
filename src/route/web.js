@@ -8,7 +8,7 @@ import { handleLogin,
          getUserById,
          updateInfoById,
          deleteUserById,
-         updateNewPassword,
+         updateNewPassword
         } 
     from "../controllers/customers/userController.js" ;
 import {
@@ -41,6 +41,7 @@ let initWebRoutes = (app)=>{
     router.get('/getById/:id', (req,res)=>{
         res.send('get by id' + req?.params?.id??"")
     });
+    //login email
     router.post('/api/login', handleLogin );
     router.post('/api/register', handleRegister );
     router.post('/api/logout', handleLogOut);

@@ -2,17 +2,35 @@ import bodyParser from "body-parser"
 import express from "express"
 import viewEngine from "./config/viewEngine.js"
 import initWebRoutes from "./route/web.js"
+import authRoute from "./route/auth.js"
 import { upload } from "../sampleData/addDataTour.js"
 
 import connect from "./database/database.js"
 import checkToken from "./authentication/auth.js"
 
+//gg
+import cookieSession from "cookie-session";
+import passport from 'passport';
+import passportStrategy from "./authentication/passport.js";
+//
+
 import dotenv from 'dotenv';
-import cors from 'cors'
+import cors from 'cors';
 dotenv.config();
 let app = express();
 // environment
 import { port, mongoURL} from "./config/main.js";
+//gg session
+//
+app.use(
+    cookieSession({
+        name: "session",
+        keys: ["cyberwolve"],
+        maxAge: 24 * 60 * 60 * 1000,
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 //cors
 const allowedOrigins = [
     'http://localhost:3000',
@@ -21,28 +39,7 @@ const allowedOrigins = [
     'http://127.0.0.1:6969',
   ];
   app.use(cors());
-//check token
-// app.use(checkToken);
-// // app.use(cors());
-// app.use(
-//     cors({
-//       origin: function (origin, callback) {
-//         if (!origin) return callback(null, true);
-//         if (allowedOrigins.indexOf(origin) === -1) {
-//           var msg =
-//             'The CORS policy for this site does not ' +
-//             'allow access from the specified Origin.'; 
-//           return callback(new Error(msg), false);
-//         }
-//         return callback(null, true);
-//       },
-//     })
-//   );
-// const logger = (req, res, next) => {
-// console.log(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
-// next();
-// };
-// app.use(logger);
+
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
@@ -50,7 +47,7 @@ app.use(bodyParser.json());
 connect(mongoURL);
 viewEngine(app);
 initWebRoutes(app);
-
+authRoute(app); 
 if(false)
 {
     upload();
