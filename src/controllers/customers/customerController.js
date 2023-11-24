@@ -68,7 +68,13 @@ export const latestTour = async (req, res) =>{
                 let imagePaths = item.urlImageN1;
                 if( imagePaths == 'none' || imagePaths =='no image')
                 {
-                    let tempImagePaths = "src/public/default/tour.jpg";
+                    // let tempImagePaths = "src/public/default/tour.jpg";
+                    let array = ["src/public/default/tour.jpg", "src/public/default/tour-default-1.jpg", "src/public/default/tour-default-2.jpg", "src/public/default/tour-default-3.jpg", "src/public/default/tour-default-4.jpg", "src/public/default/tour-default-5.jpg","src/public/default/tour-default-6.jpg","src/public/default/tour-default-7.jpg"];
+                    // Lấy một chỉ số ngẫu nhiên trong khoảng từ 0 đến độ dài của mảng
+                    let randomIndex = Math.floor(Math.random() * array.length);
+                    // Lấy phần tử từ mảng dựa trên chỉ số ngẫu nhiên đã tạo
+                    let randomElement = array[randomIndex];
+                    let tempImagePaths = randomElement;
                     try {
                         item.urlImageN1 = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
                     } catch (error) {
@@ -106,7 +112,15 @@ export const hotTour = async (req, res) =>{
             let imagePaths = item.urlImageN1;
             if( imagePaths == 'none' || imagePaths =='no image')
             {
-                let tempImagePaths = "src/public/default/tour.jpg";
+
+                // let tempImagePaths = "src/public/default/tour.jpg";
+                let array = ["src/public/default/tour.jpg", "src/public/default/tour-default-1.jpg", "src/public/default/tour-default-2.jpg", "src/public/default/tour-default-3.jpg", "src/public/default/tour-default-4.jpg", "src/public/default/tour-default-5.jpg","src/public/default/tour-default-6.jpg","src/public/default/tour-default-7.jpg"];
+                // Lấy một chỉ số ngẫu nhiên trong khoảng từ 0 đến độ dài của mảng
+                let randomIndex = Math.floor(Math.random() * array.length);
+                // Lấy phần tử từ mảng dựa trên chỉ số ngẫu nhiên đã tạo
+                let randomElement = array[randomIndex];
+                let tempImagePaths = randomElement;
+                console.log(randomElement);
                 try {
                     item.urlImageN1 = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
                 } catch (error) {

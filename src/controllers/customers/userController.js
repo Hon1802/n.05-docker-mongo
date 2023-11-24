@@ -19,7 +19,7 @@ const __dirname = dirname(__filename);
 import multer from "multer";
 import { handleAddNewPayment } from "../../services/paymentService.js";
 import { handleAddNewBooking } from "../../services/bookingService.js";
-//login
+//login email
 export const handleLogin = async (req,res) =>{
     let email = req.body.email;
     let password = req.body.password;
@@ -38,6 +38,40 @@ export const handleLogin = async (req,res) =>{
         // yourEmail: email
         userData
     }) 
+}
+//login google
+export const handleGGLogin = async (req,res) =>{
+    if (req.user) {
+        let idGG = req.user.id;
+        console.log(idGG);
+        console.log(await checkExist(idGG, 'idGG'));
+        if(await checkExist(idGG, 'idGG'))
+        {
+            return res.status(200).json({
+                errCode: 0,
+                message: "Successfully Loged In",
+                userData : req.user
+            }) 
+        } else {
+            // console.log(req.user.);
+            let name = req.user._json.name;
+            let picture = req.user._json.picture;
+            let email = req.user._json.email;
+            let pass = 'no pass';
+            console.log(name, email,pass,picture);
+            return res.status(200).json({
+                errCode: 0,
+                message: "Successfully Loged In",
+                userData : req.user
+            }) 
+        }
+    } else {
+        return res.status(400).json({
+            errCode: 1,
+            message: "Not Authorized",
+        }) 
+       
+    }
 }
 //logout
 export const handleLogOut = async (req, res) =>{
