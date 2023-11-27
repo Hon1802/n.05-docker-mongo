@@ -14,26 +14,31 @@ export default mongoose.model('Payment',
         {
             type: ObjectId,
             required:true        
-        }
-        ,        
-        method:{
+        },     
+        idPayment:{
             type: String,
+            require: true
+        },   
+        paymentSource:{
+            type: Object,
+            required:true        
+        },
+        payer:{
+            type: Object,
             required:true        
         },
         totalPrice:{
             type: Number,
             require: true,
         },
-        note:{
-            type: String,
-            require: true,
-        },
         //  0 no active, 1 active
         status:{
             type:String,
             required:true        
-        }
-        ,
+        },
+        timePay: {
+            type: Date
+        },
         updatedAt: { type: Date, default: utcToZonedTime(now, 'Asia/Ho_Chi_Minh') }
     },{
         autoCreate: false,

@@ -19,7 +19,7 @@ const __dirname = dirname(__filename);
 import multer from "multer";
 import { handleAddNewPayment } from "../../services/paymentService.js";
 import { handleAddNewBooking } from "../../services/bookingService.js";
-//login
+//login email
 export const handleLogin = async (req,res) =>{
     let email = req.body.email;
     let password = req.body.password;
@@ -38,6 +38,40 @@ export const handleLogin = async (req,res) =>{
         // yourEmail: email
         userData
     }) 
+}
+//login google
+export const handleGGLogin = async (req,res) =>{
+    if (req.user) {
+        let idGG = req.user.id;
+        console.log(idGG);
+        console.log(await checkExist(idGG, 'idGG'));
+        if(await checkExist(idGG, 'idGG'))
+        {
+            return res.status(200).json({
+                errCode: 0,
+                message: "Successfully Loged In",
+                userData : req.user
+            }) 
+        } else {
+            // console.log(req.user.);
+            let name = req.user._json.name;
+            let picture = req.user._json.picture;
+            let email = req.user._json.email;
+            let pass = 'no pass';
+            console.log(name, email,pass,picture);
+            return res.status(200).json({
+                errCode: 0,
+                message: "Successfully Loged In",
+                userData : req.user
+            }) 
+        }
+    } else {
+        return res.status(400).json({
+            errCode: 1,
+            message: "Not Authorized",
+        }) 
+       
+    }
 }
 //logout
 export const handleLogOut = async (req, res) =>{
@@ -92,7 +126,7 @@ export const updateAvatar = async (req, res) =>{
             let pathFile = 'src/public/imageUser/' + pathName;
             let userData = await uploadAvatar(pathFile, userId);
 
-            return res.status(200).json({
+            return res.status(userData.status).json({
                 errCode: userData.errCode,
                 message: userData.errMessage,
                 userData
@@ -108,7 +142,7 @@ export const updateAvatar = async (req, res) =>{
 }
 // get user by id
 export const getUserById = async (req, res) => {
-    // try{
+    try{
         let userId = req.body.id;
         if(await checkExist(userId, 'id'))
         {
@@ -141,30 +175,31 @@ export const getUserById = async (req, res) => {
             });
             
         }
-    // } catch(e)
-    // {
-    //     return res.status(400).json({
-    //         errCode: 1,
-    //         message: 'Not found',
-    //     }) 
-    // }
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
 }
 // update information by id
 export const updateInfoById = async (req, res) => {
     try {
         let userId = req.body.id;
+        let nameUser = req.body.nameUser;
         let address = req.body.address;
         let phone = req.body.phone;
         let gender = req.body.gender;
-        let userData = await updateById(userId, address, phone, gender);
-        return res.status(200).json({
+        let userData = await updateById(userId, nameUser, address, phone, gender);
+        return res.status(userData.status).json({
             errCode: userData.errCode,
             message: userData.message,
             userData
         }) 
     } catch(e)
     {
-        return res.status(200).json({
+        return res.status(400).json({
             errCode: 1,
             message: 'Not found',
         }) 
@@ -178,14 +213,14 @@ export const updateNewPassword = async (req, res) => {
         let newPassword = req.body.newPassword;
         
         let userData = await updatePassword(userId, oldPassword, newPassword);
-        return res.status(200).json({
+        return res.status(userData.status).json({
             errCode: userData.errCode,
             message: userData.message,
             userData
         }) 
     } catch(e)
     {
-        return res.status(200).json({
+        return res.status(400).json({
             errCode: 1,
             message: 'Not found',
         }) 
@@ -197,14 +232,14 @@ export const deleteUserById = async (req, res) => {
         let userId = req.body.id;
         let password = req.body.password;
         let userData = await changeStatusUser(userId, password);
-        return res.status(200).json({
+        return res.status(userData.status).json({
             errCode: userData.errCode,
             message: userData.message,
             userData
         }) 
     } catch(e)
     {
-        return res.status(200).json({
+        return res.status(400).json({
             errCode: 1,
             message: 'Not found',
         }) 
@@ -223,38 +258,3 @@ const storage = multer.diskStorage({
   });
 export const upload = multer({ storage });
 
-//payment
-
-export const handlePayment = async (req, res) =>{
-    let tourId = req.body.tourId;
-    let userId = req.body.userId;
-    let method = req.body.method;
-    let totalPrice = req.body.totalPrice;
-    let note = req.body.note;
-    let userData = await handleAddNewPayment(tourId, 
-        userId, 
-        method, 
-        totalPrice,
-        note);
-
-    return res.status(userData.status).json({
-        errCode: userData.errCode,
-        message: userData.errMessage,
-        userData
-    }) 
-}
-export const handleBooking = async (req, res) =>{
-    let tourId = req.body.tourId;
-    let userId = req.body.userId;
-    let paymentId = req.body.paymentId;
-
-    let userData = await handleAddNewBooking(tourId, 
-        userId, 
-        paymentId);
-
-    return res.status(userData.status).json({
-        errCode: userData.errCode,
-        message: userData.errMessage,
-        userData
-    }) 
-}

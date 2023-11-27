@@ -5,6 +5,9 @@ import validator from 'validator';
 export default mongoose.model('User',
     new Schema({
         id:{type: ObjectId},
+        idGoogle:{
+            type: String
+        },
         name:{
             type:String,
             required:true,

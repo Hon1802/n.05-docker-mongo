@@ -1,7 +1,7 @@
 import { ObjectId } from "bson";
 import mongoose, { Schema } from "mongoose";
 import { utcToZonedTime } from 'date-fns-tz'
-// Lấy thời gian hiện tại và chuyển về múi giờ mong muốn
+// 
 const now = new Date();
 export default mongoose.model('Booking',
     new Schema({
@@ -14,11 +14,28 @@ export default mongoose.model('Booking',
         {
             type: ObjectId,
             required:true        
-        }
-        ,        
-        idPayment:{
-            type: ObjectId,
-            required:true        
+        },   
+        idPayment:
+        {
+            type: String,
+            require: true
+        },     
+        children:[{ 
+            firstName: String,
+            lastName: String,
+            gender: String
+          }],
+        adult:[{ 
+            firstName: String,
+            lastName: String,
+            gender: String
+          }],
+        nChildren:{
+            type: Number,
+        },
+        nAdult:{
+            type: Number,
+            require: true
         },
         // 4 status, 0 no active, 1 active, 2 sold, 3 traveling
         status:{

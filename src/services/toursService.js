@@ -270,7 +270,8 @@ export const handleFilter = (
             //
             // region
             if (region) {
-                query = query.where('region').equals(region);
+                // query = query.where('region').equals(region);
+                query = query.where('region', new RegExp(region, 'i'));
             }          
             // maximum price
             if (maximumPrice) {

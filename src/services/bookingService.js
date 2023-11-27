@@ -1,22 +1,36 @@
 import { Tour, Booking, Payment } from "../models/index.js";
+import { mongoose } from "mongoose";
 export const handleAddNewBooking = (
     tourId, 
-    userId, 
-    paymentId, 
+    userId,  
+    paymentId,
+    children,
+    adult,
+    nChildren,
+    nAdult,
     status = 1
     ) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let bookingData = {};
-            let isExist = await Payment.findOne({_id: paymentId }).exec();            
+            let isExist = await Booking.findOne({idPayment: paymentId}).exec();
             if(isExist)
-            {   
+            {
+                bookingData.status = 400;
+                    bookingData.errCode = 2;
+                    bookingData.errMessage = 'payment only use for one time'
+                    resolve(bookingData)
+            } else{
                 try {
                     //insert db
                     const newBooking = await Booking.create({
-                        idTour: tourId,
-                        idUser: userId,
-                        idPayment: paymentId,
+                        idTour: new mongoose.Types.ObjectId(tourId),
+                        idUser: new mongoose.Types.ObjectId(userId),
+                        idPayment : paymentId,
+                        children: children,
+                        adult: adult,
+                        nChildren: nChildren,
+                        nAdult: nAdult,
                         status : status,
                     })
                     bookingData.status = 200;
@@ -27,18 +41,13 @@ export const handleAddNewBooking = (
                     }
                     resolve(bookingData)
                 } catch(e){ 
-                    console.log(e)
                     bookingData.status = 400;
                     bookingData.errCode = 2;
                     bookingData.errMessage = 'Error when create'
                     resolve(bookingData)
                 }  
-            }else{
-                tourData.status = 400;
-                tourData.errCode = 1;
-                tourData.errMessage ='Not payment'            
-                resolve(tourData)
             }
+            
         }catch(e){
             let bookingData = {};
             bookingData.status = 400;
@@ -86,11 +95,11 @@ export const handleHotTour = () =>{
                     {
                         $project: {
                             _id: 1,
-                
                             name: 1, // Add other fields from Tour you want to retrieve
                             description: 1,
                             // Include the bookingsCount field
-                            bookingsCount: 1
+                            urlImageN1: 1,
+                            bookingsCount: 1,
                         }
                     },
                     {

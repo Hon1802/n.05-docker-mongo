@@ -14,6 +14,10 @@ export default async function checkToken(req, res, next) {
         || req.url.toLowerCase().trim() =='/api/get-tour-by-id'.toLowerCase().trim()
         || req.url.toLowerCase().trim() =='/api/latest-tour'.toLowerCase().trim()
         || req.url.toLowerCase().trim() =='/api/hot-tour'.toLowerCase().trim()
+        || req.url.toLowerCase().trim() =='/auth/login/success'.toLowerCase().trim()
+        || req.url.toLowerCase().trim() =='/auth/login/failed'.toLowerCase().trim()
+        || req.url.toLowerCase().trim() =='/auth/google/callback'.toLowerCase().trim()
+        || req.url.toLowerCase().trim() =='/auth/logout'.toLowerCase().trim()
         
     ){
         next()

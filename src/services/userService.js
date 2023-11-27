@@ -39,21 +39,21 @@ export const handleUserLogin = (email, password, userData = {}) =>{
                     }
                     resolve(userData)
                 } else {
-                    userData.status = 401;
+                    userData.status = 400;
                     userData.errCode = 1;
                     userData.errMessage ='Wrong password'
                     resolve(userData)
                 }
                 resolve()
             }else{
-                userData.status = 404;
+                userData.status = 400;
                 userData.errCode = 2;
                 userData.errMessage ='Your account not exist'
                 resolve(userData)
             }
         }catch(e){
             let userData = {};
-            userData.status = 404;
+            userData.status = 400;
             userData.errCode = 3;
             userData.errMessage ='Error connect'
             resolve(userData)
@@ -82,7 +82,7 @@ export const handleUserLogOut = (userId) =>{
             resolve(userData)
         }catch(e){
             let userData = {};
-            userData.status = 404;
+            userData.status = 400;
             userData.errCode = 1;
             userData.errMessage ='Not connect';
             resolve(userData)
@@ -97,7 +97,7 @@ export const handleUserRegister = (fullName, address, email,password, phone, gen
             let isExist = await User.findOne({email}).exec();            
             if(isExist)
             {   
-                userData.status = 409;
+                userData.status = 400;
                 userData.errCode = 3;
                 userData.errMessage = 'Email exists';
                 resolve(userData)
@@ -125,7 +125,7 @@ export const handleUserRegister = (fullName, address, email,password, phone, gen
                     }
                     resolve(userData)
                 } catch(e){
-                    userData.status = 422;
+                    userData.status = 400;
                     userData.errCode = 4;
                     userData.errMessage = 'Unprocessable Entity'  ;
                     resolve(userData)
@@ -133,7 +133,7 @@ export const handleUserRegister = (fullName, address, email,password, phone, gen
             }
         }catch(e){
             let userData = {};
-            userData.status = 500;
+            userData.status = 400;
             userData.errCode = 3;
             userData.errMessage ='Your account was not created'             
             rejects(userData)
@@ -152,15 +152,18 @@ export const uploadAvatar = (path, idUser) =>{
               );
             if (user.nModified === 0) {
             // If no user was modified, it means the user with the given id was not found
-                userData.errCode = 404;
+                userData.errCode = 4;
+                userData.status = 400;
                 userData.errMessage = 'User not found';
                 resolve(userData);
             }
-
+            userData.status = 200;
             userData.errCode = 0; // Assuming 0 means success
             userData.errMessage = 'Avatar uploaded successfully';
             resolve(userData);
         }catch(e){   
+            let userData = {};
+            userData.status = 400;
             userData.errCode = 3;
             userData.errMessage ='Error uploading avatar'             
             rejects(userData)
@@ -200,32 +203,36 @@ export const getById = (userId) =>{
     })
 };
 //update by id
-export const updateById = (userId, address, phone, gender) =>{
+export const updateById = (userId, name, address, phone, gender) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let userData = {};
             const user = await User.updateOne(
                 { _id: userId }, // Filter: Find the user with the given id
                 { $set: { 
+                    name : name,
                     address: address,
-                    phone: phone,
+                    phoneNumber: phone,
                     gender: gender
                  } } // Update: Set the urlAvatar field to the new path
               );
             if (user.nModified === 0) {
             // If no user was modified, it means the user with the given id was not found
-                userData.errCode = 404;
+                userData.status = 400;
+                userData.errCode = 4;
                 userData.errMessage = 'User not found';
                 resolve(userData);
             }
-
+            userData.status = 200;
             userData.errCode = 0; // Assuming 0 means success
             userData.errMessage = 'Uploaded successfully';
             resolve(userData);
         }catch(e){
+            let userData = {};
+            userData.status = 400;
             userData.errCode = 3;
             userData.errMessage ='Your account was not created'             
-            rejects(userData)
+            resolve(userData)
         }
     })
 };
@@ -247,24 +254,29 @@ export const updatePassword = (userId, oldPassword, newPassword) =>{
                            password: hashedPassword
                          } } // Update: new pass
                       );
+                    userData.status = 200;
                     userData.errCode = 0;
                     userData.errMessage = 'Success';
                     resolve(userData);
                 } else {
+                    userData.status = 400;
                     userData.errCode = 2;
                     userData.errMessage ='Wrong password'
                     resolve(userData)
                 }
                 resolve()
             }else{
+                userData.status = 400;
                 userData.errCode = 1;
                 userData.errMessage ='Your account not exist'
                 resolve(userData)
             }
         }catch(e){
+            let userData = {};
+            userData.status = 400;
             userData.errCode = 3;
             userData.errMessage ='Error connect'
-            rejects(userData)
+            resolve(userData)
         }
     })
 };
@@ -286,24 +298,29 @@ export const changeStatusUser = (userId, password) =>{
                            status: 0
                          } } // Update: new pass
                       );
+                    userData.status = 200;
                     userData.errCode = 0;
                     userData.errMessage = 'Success';
                     resolve(userData);
                 } else {
+                    userData.status = 400;
                     userData.errCode = 2;
                     userData.errMessage ='Wrong password'
                     resolve(userData)
                 }
                 resolve()
             }else{
+                userData.status = 400;
                 userData.errCode = 1;
                 userData.errMessage ='Your account not exist'
                 resolve(userData)
             }
         }catch(e){
+            let userData = {};
+            userData.status = 400;
             userData.errCode = 3;
             userData.errMessage ='Error connect'
-            rejects(userData)
+            resolve(userData)
         }
     })
 };
@@ -325,6 +342,17 @@ export const checkExist = (text, types) =>{
             } else if (types === 'email')
             {
                 let isExist = await User.findOne({email: text}).exec();  
+                if(isExist)
+                {
+                    checks = true;
+                    resolve(checks);
+                } else{
+                    resolve(checks);
+                }
+            } else if (types ==='idGG')
+            {
+                let isExist = await User.findOne({idGoogle: text}).exec(); 
+                console.log(isExist);
                 if(isExist)
                 {
                     checks = true;
