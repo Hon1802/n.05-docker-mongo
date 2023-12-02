@@ -22,7 +22,6 @@ async function uploadEach(item) {
         item.destination, 
         item.region, 
         item.duration, 
-        item.displayPrice,
         item.childPrice, 
         item.adultPrice, 
         item.departureTime,

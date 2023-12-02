@@ -8,11 +8,10 @@ export const handleAddNewTour = (
     destination, 
     region, 
     duration, 
-    displayPrice,
     childPrice, 
     adultPrice, 
-    departureTime,
-    returnTime,
+    openTime,
+    closeTime,
     status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -28,20 +27,25 @@ export const handleAddNewTour = (
             }else{
                 try {
                     //insert db
-                    const newTour = await Tour.create({
+                    const newTour = await Tour.create({                        
                         name: name,
-                        description:description,
+                        description:description, 
                         destination: destination,
                         region: region,
                         duration: duration,
-                        displayPrice: displayPrice,
+                        openTime : openTime,
+                        closeTime : closeTime,
                         childPrice: childPrice, 
                         adultPrice: adultPrice, 
-                        departureTime : departureTime,
-                        returnTime : returnTime,
-                        urlImageN1: 'none', 
-                        urlImageN2: 'none',
-                        urlImageN3: 'none',
+                        images: [{
+                        urlImage: "none"
+                        },{
+                        urlImage: "none"
+                        },
+                        {
+                        urlImage: "none"
+                        },
+                        ],
                         status : status,
                     })
                     tourData.status = 200;
@@ -134,13 +138,16 @@ export const uploadImages = (paths, idTour) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
+            
+            const newPaths = paths.map((path) => {
+                return { urlImage: path};
+            });
+          
             const tour = await Tour.updateOne(
                 { _id: idTour }, // Filter: Find the tour with the given id
                 { 
                     $set: { 
-                    urlImageN1 : paths[0],
-                    urlImageN2 : paths[1],
-                    urlImageN3: paths[2] 
+                        images:newPaths, 
                     } 
                 } // Update: Set the urlAvatar field to the new path
               );
@@ -241,6 +248,7 @@ export const handleGetAllTour = (tourId) =>{
                 tourData.errCode = 2;
                 tourData.errMessage ='Get tour by id success';
                 tourData.data = tours.map(tour => tour.toObject());
+                console.log(tours.map(tour => tour.toObject()))
                 resolve(tourData)
             }else{
                 tourData.status = 400;

@@ -31,8 +31,12 @@ export default mongoose.model('Tour',
             type: Number,
             required:true        
         },
-        displayPrice:{
-            type: Number,
+        openTime:{
+            type: Date,
+            required:true        
+        },        
+        closeTime:{
+            type:Date,
             required:true        
         },
         childPrice:{
@@ -43,25 +47,11 @@ export default mongoose.model('Tour',
             type: Number,
             required:true        
         },
-        departureTime:{
-            type: Date,
-            required:true        
-        },        
-        returnTime:{
-            type:Date,
-            required:true        
-        },
-        urlImageN1:{
-            type:String
-        },
-        urlImageN2:{
-            type:String
-        },
-        urlImageN3:{
-            type:String
-        },
+        images:[{ 
+            urlImage: String,
+          }],
         status:{
-            type:Number,
+            type: Number,
             required:true        
         },
         updatedAt: { type: Date, default: utcToZonedTime(now, 'Asia/Ho_Chi_Minh') }

@@ -98,7 +98,7 @@ export const handleHotTour = () =>{
                             name: 1, // Add other fields from Tour you want to retrieve
                             description: 1,
                             // Include the bookingsCount field
-                            urlImageN1: 1,
+                            images: 1,
                             bookingsCount: 1,
                         }
                     },

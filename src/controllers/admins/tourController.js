@@ -16,7 +16,6 @@ export const handleAddNew = async (req, res) =>{
     let destination = req.body.destination;
     let region = req.body.region;
     let duration = req.body.duration;
-    let displayPrice = req.body.displayPrice;
     let childPrice = req.body.childPrice;
     let adultPrice = req.body.adultPrice;
     let departureTime = req.body.departureTime;
@@ -36,11 +35,10 @@ export const handleAddNew = async (req, res) =>{
                                         destination, 
                                         region, 
                                         duration, 
-                                        displayPrice, 
                                         childPrice, 
                                         adultPrice,
-                                        departureTime,
-                                        returnTime, 
+                                        openTime,
+                                        closeTime, 
                                         status);
     return res.status(tourData.status).json({
         errCode: tourData.errCode,
@@ -144,48 +142,45 @@ export const getTourById = async (req, res) => {
         if(await checkExist(tourId, 'id'))
         {
             let tourData = await handleGetTourById(tourId);
-            let image1 = tourData.data.urlImageN1;
-            let image2 = tourData.data.urlImageN2;
-            let image3 = tourData.data.urlImageN3;
-            if( image1 == 'none' || image1 =='no image' )
-            {
-                image1 = "src/public/default/tour.jpg";
-            }
-            if( image2 == 'none' )
-            {
-                image2 = "src/public/default/tour.jpg";
-            }
-            if( image3 == 'none' )
-            {
-                image3 = "src/public/default/tour.jpg";
-            }
-            // Example usage
-            const imagePaths = [image1, image2, image3];
-            const base64ImagesArray = [];
-            convertImage(imagePaths)
-            .then((base64Images) => {
-                base64ImagesArray.push(...base64Images);
-                if(tourData.errCode == 2)
+            let base64ImagesArray = [];
+            const temp = await Promise.all(tourData.data.images.map(async (urlIma) => {
+                let imagePaths = urlIma.urlImage;
+                if( imagePaths == 'none' || imagePaths =='no image')
                 {
-                    tourData = {
-                        ...tourData.data,
-                        imageBase64Array : base64ImagesArray
-                    },
-                    tourData.status = 200
+                    let array = ["src/public/default/tour.jpg", "src/public/default/tour-default-1.jpg", "src/public/default/tour-default-2.jpg", "src/public/default/tour-default-3.jpg", "src/public/default/tour-default-4.jpg", "src/public/default/tour-default-5.jpg","src/public/default/tour-default-6.jpg","src/public/default/tour-default-7.jpg"];
+                    let randomIndex = Math.floor(Math.random() * array.length);
+                    let randomElement = array[randomIndex];
+                    let tempImagePaths = randomElement;
+                    try {
+                        const base64Image = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
+                        base64ImagesArray.push(base64Image); // Thêm base64Image vào mảng base64ImagesArray
+                        
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
                 }
-                return res.status(tourData.status).json({
-                    errCode: tourData.errCode,
-                    message: tourData.errMessage,
-                    tourData
-                }) 
-            })
-            .catch((error) => {
-                // console.error('Error:', error);
-                return res.status(400).json({
-                    errCode: 4,
-                    message: 'Error when get tour',
-                }) 
-            });
+                else {
+                    try {
+            
+                        const base64Image = fs.readFileSync(imagePaths, {encoding: 'base64'});
+                        base64ImagesArray.push(base64Image);
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+                return urlIma; // Trả về đường dẫn urlImage
+            }));
+            tourData = {
+                ...tourData.data,
+                images:'',
+                imageBase64Array : base64ImagesArray
+            },
+            tourData.status = 200
+            return res.status(tourData.status).json({
+                errCode: tourData.errCode,
+                message: tourData.errMessage,
+                tourData
+            }) 
         }
     } catch(e)
     {
@@ -201,24 +196,38 @@ export const getAllTour = async(req, res) =>{
     let tourData = await handleGetAllTour();
     const urlImageN1Array = tourData.data.map(async (item) => 
         {
-            let imagePaths = item.urlImageN1;
-            if( imagePaths !== 'none')
-            {
-                try {
-                    item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
-                } catch (error) {
-                    console.error('Error:', error);
+            const temp = await Promise.all(item.images.map(async (urlIma) => {
+                let imagePaths = urlIma.urlImage;
+                if( imagePaths !== 'none')
+                {
+                    try {
+                        item.urlImageN1 = fs.readFileSync(imagePaths, {encoding: 'base64'});
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
                 }
-            }
-            else {
-                item.urlImageN1 = 'no image';
-            }
+                else {
+                    // let tempImagePaths = "src/public/default/tour.jpg";
+                    let array = ["src/public/default/tour.jpg", "src/public/default/tour-default-1.jpg", "src/public/default/tour-default-2.jpg", "src/public/default/tour-default-3.jpg", "src/public/default/tour-default-4.jpg", "src/public/default/tour-default-5.jpg","src/public/default/tour-default-6.jpg","src/public/default/tour-default-7.jpg"];
+                    // Lấy một chỉ số ngẫu nhiên trong khoảng từ 0 đến độ dài của mảng
+                    let randomIndex = Math.floor(Math.random() * array.length);
+                    // Lấy phần tử từ mảng dựa trên chỉ số ngẫu nhiên đã tạo
+                    let randomElement = array[randomIndex];
+                    let tempImagePaths = randomElement;
+                    try {
+                        item.urlImageN1 = fs.readFileSync(tempImagePaths, {encoding: 'base64'});
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                    // item.urlImageN1 = 'no image';
+                }
+                return urlIma; // Trả về đường dẫn urlImage
+            }));
             return item;
         });
     return res.status(tourData.status).json({
         errCode: tourData.errCode,
         message: tourData.message,
-        urlImageN1Array,
         tourData
     }) 
 }

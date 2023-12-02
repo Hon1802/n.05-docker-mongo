@@ -47,8 +47,9 @@ app.use(bodyParser.json());
 connect(mongoURL);
 viewEngine(app);
 initWebRoutes(app);
-authRoute(app); 
-if(false)
+authRoute(app);  
+const loadData = false;
+if(loadData)
 {
     upload();
     console.log('upload success');
