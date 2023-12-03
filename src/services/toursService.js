@@ -400,7 +400,13 @@ export const getLastTour = () =>{
             const recentTours = await Tour.find()
             .sort({updateAt: -1 }) // Sắp xếp theo trường updatedAt giảm dần (ngày gần nhất đến xa nhất)
             .limit(5); // Giới hạn kết quả trả về thành 5 đối tượng
-            tourData.data = recentTours;
+            const modifiedTours = recentTours.map(tour => {
+                return {
+                    ...tour.toObject(),
+                    urlImageN1: 'newValue' // Thay 'newField' và 'newValue' bằng tên và giá trị bạn muốn thêm
+                };
+            });
+            tourData.data = modifiedTours;
             tourData.status = 200;
             tourData.errCode = 0;
             tourData.errMessage ='Success'             
