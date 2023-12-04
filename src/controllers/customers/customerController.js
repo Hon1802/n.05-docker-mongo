@@ -9,20 +9,20 @@ import {
 } from "../../services/bookingService.js" ;
 export const filterTour = async (req, res) =>{
     try{
-        let region = req.body.region;
-        let maximumPrice = req.body.maximumPrice;
-        let minimumPrice = req.body.minimumPrice;
-        let duration = req.body.duration;
         let from = req.body.from;
         let to = req.body.to;
+        let region = req.body.region;
+        let duration = req.body.duration;
+        let budget = req.body.budget;
+        let nNight = req.body.nNight;
+        let nDay = req.body.nNight;
         let name = req.body.name;
         let tourData = await handleFilter(
-            region, 
-            maximumPrice, 
-            minimumPrice, 
-            duration, 
             from, 
             to, 
+            region, 
+            duration, 
+            budget,  
             name);
         const urlImageN1Array = tourData.data.map(async (item) => 
         {

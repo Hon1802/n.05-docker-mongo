@@ -18,8 +18,8 @@ export const handleAddNew = async (req, res) =>{
     let duration = req.body.duration;
     let childPrice = req.body.childPrice;
     let adultPrice = req.body.adultPrice;
-    let departureTime = req.body.departureTime;
-    let returnTime = req.body.returnTime;
+    let openTime = req.body.openTime;
+    let closeTime = req.body.closeTime;
     let status = req.body.status;
     if (!nameTour || !description || !region ){
         return res.status(400).json({

@@ -48,12 +48,15 @@ connect(mongoURL);
 viewEngine(app);
 initWebRoutes(app);
 authRoute(app);  
+let ttt = 0;
 const loadData = false;
 if(loadData)
 {
     upload();
+    ttt+=1;
     console.log('upload success');
 }
+console.log(ttt)
 app.listen(port, () =>{
-    console.log('run on : ' + port);
-})
+    console.log('run on : ' + port); 
+}) 

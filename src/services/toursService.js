@@ -12,7 +12,10 @@ export const handleAddNewTour = (
     adultPrice, 
     openTime,
     closeTime,
-    status = 1) =>{
+    status = 1,
+    url1 = 'none',
+    url2 = 'none',
+    url3 = 'none') =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
@@ -38,12 +41,12 @@ export const handleAddNewTour = (
                         childPrice: childPrice, 
                         adultPrice: adultPrice, 
                         images: [{
-                        urlImage: "none"
+                        urlImage: url1
                         },{
-                        urlImage: "none"
+                        urlImage: url2
                         },
                         {
-                        urlImage: "none"
+                        urlImage: url3
                         },
                         ],
                         status : status,
@@ -267,12 +270,11 @@ export const handleGetAllTour = (tourId) =>{
 };
 //function for filter
 export const handleFilter = (
-    region,  
-    maximumPrice, 
-    minimumPrice, 
-    duration, 
     from, 
     to, 
+    region, 
+    duration, 
+    budget, 
     name) =>{ 
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -286,13 +288,20 @@ export const handleFilter = (
                 query = query.where('region', new RegExp(region, 'i'));
             }          
             // maximum price
-            if (maximumPrice) {
+            if (budget) {
                 query = query.where('displayPrice').lte(parseInt(maximumPrice));
             }
-            // minimum price
-            if (minimumPrice) {
-                query = query.where('displayPrice').gte(parseInt(minimumPrice));
-            }
+            // // minimum price
+            // if (minimumPrice) {
+            //     query = query.where('displayPrice').gte(parseInt(minimumPrice));
+            // }
+             // nDay
+            // if (nDay) {
+            //     query = query.where('displayPrice').gte(parseInt(minimumPrice));
+            // }
+            // if (nNight) {
+            //     query = query.where('displayPrice').gte(parseInt(minimumPrice));
+            // }
             // duration
             if (duration) {
                 query = query.where('duration').equals(parseInt(duration));
