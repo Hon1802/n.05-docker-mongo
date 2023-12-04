@@ -10,13 +10,16 @@ import {
 export const filterTour = async (req, res) =>{
     try{
         let from = req.body.from;
+        from = from.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         let to = req.body.to;
+        to = to.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         let region = req.body.region;
-        let duration = req.body.duration;
+        let duration = req.body.durationType;
         let budget = req.body.budget;
         let nNight = req.body.nNight;
         let nDay = req.body.nNight;
         let name = req.body.name;
+        name = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         let tourData = await handleFilter(
             from, 
             to, 

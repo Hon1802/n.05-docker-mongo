@@ -6,8 +6,11 @@ export const handleAddNewTour = (
     name, 
     description, 
     destination, 
+    districtDes,
     region, 
     duration, 
+    durationType,
+    pickUp,
     childPrice, 
     adultPrice, 
     openTime,
@@ -34,8 +37,11 @@ export const handleAddNewTour = (
                         name: name,
                         description:description, 
                         destination: destination,
+                        districtDes: districtDes,
                         region: region,
                         duration: duration,
+                        durationType: durationType,
+                        pickUp: pickUp,
                         openTime : openTime,
                         closeTime : closeTime,
                         childPrice: childPrice, 
@@ -289,63 +295,31 @@ export const handleFilter = (
             }          
             // maximum price
             if (budget) {
-                query = query.where('displayPrice').lte(parseInt(maximumPrice));
+                query = query.where('adultPrice').lte(parseInt(budget));
             }
-            // // minimum price
-            // if (minimumPrice) {
-            //     query = query.where('displayPrice').gte(parseInt(minimumPrice));
-            // }
-             // nDay
-            // if (nDay) {
-            //     query = query.where('displayPrice').gte(parseInt(minimumPrice));
-            // }
-            // if (nNight) {
-            //     query = query.where('displayPrice').gte(parseInt(minimumPrice));
-            // }
             // duration
             if (duration) {
-                query = query.where('duration').equals(parseInt(duration));
+                query = query.where('durationType', new RegExp(duration, 'i'));
             }
-            
             // name
             if (name) {
                 query = query.where('name', new RegExp(name, 'i'));
             }
-    
             // time
             if (from ) {
-                
-                if(!to)
+                query = query.where('pickUp', new RegExp(from, 'i'));
+                if(to)
                 {
-                    // to = new Date();
-                    const currentDate = new Date();
-                    to = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(currentDate);
-                    // let newTo = new Date(to + 1 * 24 * 60 * 60 * 1000);
+                    query = query.where('districtDes', new RegExp(to, 'i'));
                 }
-                
-                // console.log(newTo)
-                queryDate = query.where('departureTime').gte(new Date(from)).lte(new Date(to));
-                let resultDate = await queryDate.exec(); // result not object, so need to transform to object
-                let resultsArray = Array.isArray(resultDate) ? resultDate : [resultDate];
+                let result = await query.exec(); // result not object, so need to transform to object
+                let resultsArray = Array.isArray(result) ? result : [result];
                 let transformedResults = resultsArray.map(item => item.toObject());
-                if(transformedResults.length === 0) {
-                    tourData.status = 200;
-                    tourData.data = [];
-                    tourData.errCode = 0;
-                    tourData.errMessage ='Success'
-                    resolve(tourData) 
-                } else{
-                    transformedResults.forEach(result => {
-                        // category
-                        query = query.where('_id').equals(result._id);
-                        console.log('Transformed Result idTour:', result._id);
-                        tourData.data = transformedResults;
-                        tourData.status = 200;
-                        tourData.errCode = 0;
-                        tourData.errMessage ='Success'
-                        resolve(tourData) 
-                    });
-                }
+                tourData.data = transformedResults;
+                tourData.status = 200;
+                tourData.errCode = 0;
+                tourData.errMessage ='Success'
+                resolve(tourData) 
             } else{
                 let result = await query.exec(); // result not object, so need to transform to object
                 let resultsArray = Array.isArray(result) ? result : [result];
@@ -360,7 +334,7 @@ export const handleFilter = (
             let tourData = {};
             tourData.status = 400;
             tourData.errCode = 3;
-            tourData.errMessage ='Error exe'             
+            tourData.errMessage ='Error when filter'             
             resolve(tourData)
         }
     })

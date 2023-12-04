@@ -14,8 +14,11 @@ export const handleAddNew = async (req, res) =>{
     let nameTour = req.body.name;
     let description = req.body.description;
     let destination = req.body.destination;
+    let districtDes = req.body.districtDes;
     let region = req.body.region;
     let duration = req.body.duration;
+    let durationType = req.body.durationType;
+    let pickUp = req.body.pickUp;
     let childPrice = req.body.childPrice;
     let adultPrice = req.body.adultPrice;
     let openTime = req.body.openTime;
@@ -30,16 +33,23 @@ export const handleAddNew = async (req, res) =>{
     if(!status){
         status = "1";
     }
+    let url = 'none';
     let tourData = await handleAddNewTour(nameTour, 
                                         description, 
                                         destination, 
+                                        districtDes,
                                         region, 
                                         duration, 
+                                        durationType,
+                                        pickUp,
                                         childPrice, 
                                         adultPrice,
                                         openTime,
                                         closeTime, 
-                                        status);
+                                        status,
+                                        url,
+                                        url,
+                                        url);
     return res.status(tourData.status).json({
         errCode: tourData.errCode,
         message: tourData.errMessage,

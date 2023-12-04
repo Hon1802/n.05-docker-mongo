@@ -75,11 +75,17 @@ export const upload = async() => {
             let url1 = row.urlImage1;
             let url2 = row.urlImage2;
             let url3 = row.urlImage3;
+            let districtDes = row.Province;
+            let durationType = row.durationType;
+            let pickUp = row.pickUp;
             handleAddNewTour( name, 
                 description, 
                 destination, 
+                districtDes,
                 region, 
                 duration, 
+                durationType,
+                pickUp,
                 childPrice, 
                 adultPrice, 
                 openTime,

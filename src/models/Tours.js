@@ -23,6 +23,9 @@ export default mongoose.model('Tour',
             type:String,
             required:true        
         },
+        districtDes:{
+            type: String,
+        },
         region:{
             type:String,
             required:true        
@@ -30,6 +33,12 @@ export default mongoose.model('Tour',
         duration:{
             type: Number,
             required:true        
+        },
+        durationType:{
+            type: String,
+        },
+        pickUp:{
+            type: String,
         },
         openTime:{
             type: Date,
