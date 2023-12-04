@@ -4,6 +4,7 @@ import viewEngine from "./config/viewEngine.js"
 import initWebRoutes from "./route/web.js"
 import authRoute from "./route/auth.js"
 import { upload } from "../sampleData/addDataTour.js"
+import {uploadFlight } from "../sampleData/flight.js"
 
 import connect from "./database/database.js"
 import checkToken from "./authentication/auth.js"
@@ -20,6 +21,8 @@ dotenv.config();
 let app = express();
 // environment
 import { port, mongoURL} from "./config/main.js";
+//check token
+// app.use(checkToken)
 //gg session
 //
 app.use(
@@ -52,7 +55,8 @@ let ttt = 0;
 const loadData = false;
 if(loadData)
 {
-    upload();
+    // upload();
+    // uploadFlight();
     ttt+=1;
     console.log('upload success');
 }

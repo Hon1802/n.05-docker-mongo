@@ -128,7 +128,7 @@ export const latestTour = async (req, res) =>{
             }));
             return item;
         });
-        console.log(tourData.data.urlImageN1);
+        // console.log(tourData.data.urlImageN1);
         return res.status(tourData.status).json({
             errCode: tourData.errCode,
             message: tourData.errMessage,

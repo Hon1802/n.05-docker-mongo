@@ -57,7 +57,7 @@ export const handleCheckBooking = async (tourId,
     {
       if(paymentInfo.status == "COMPLETED")
       {
-        console.log(paymentInfo.status)
+        // console.log(paymentInfo.status)
         let paymentSource = paymentInfo.payment_source;
         let payer = paymentInfo.payer; 
         let update_time = paymentInfo.update_time;

@@ -62,14 +62,16 @@ export const updateTourById = async(req, res) =>{
         let tourId = req.body.id;
         let nameTour = req.body.name;
         let description = req.body.description;
+        let districtDes = req.body.districtDes;
         let destination = req.body.destination;
         let region = req.body.region;
         let duration = req.body.duration;
-        let displayPrice = req.body.displayPrice;
-        let childPrice = req.body.childPrice;
+        let durationType = req.body.durationType;
+        let pickUp = req.body.pickUp;
+        let childPrice = req.body.childPrice; 
         let adultPrice = req.body.adultPrice;
-        let departureTime = req.body.departureTime;
-        let returnTime = req.body.returnTime;
+        let openTime = req.body.openTime;
+        let closeTime = req.body.closeTime;
         let status = req.body.status;
         if( await checkExist(nameTour, 'name'))
         {
@@ -80,16 +82,17 @@ export const updateTourById = async(req, res) =>{
         } else{
             let tourData = await handleUpdateTourById(
                 tourId, 
-                nameTour, 
                 description, 
                 destination, 
+                districtDes,
                 region, 
                 duration, 
-                displayPrice, 
+                durationType,
+                pickUp,
                 childPrice, 
                 adultPrice, 
-                departureTime,
-                returnTime,
+                openTime,
+                closeTime,
                 status);
             return res.status(tourData.status).json({
                 errCode: tourData.errCode,

@@ -144,6 +144,7 @@ export const updateAvatar = async (req, res) =>{
 export const getUserById = async (req, res) => {
     try{
         let userId = req.body.id;
+        console.log(userId);
         if(await checkExist(userId, 'id'))
         {
             let userData = await getById(userId);
@@ -151,9 +152,11 @@ export const getUserById = async (req, res) => {
             if (imagePath == 'none' || imagePath == "no image") {
                 imagePath = 'src/public/default/avatar.jpg';
             };
+            console.log(imagePath);
             let base64Image = '';
             fs.readFile(imagePath, async (err, data)  => {
                 if (err) {
+                  console.log(err);
                   return res.status(400).send('Internal Server Error');
                 }
                 userData.status = 400;

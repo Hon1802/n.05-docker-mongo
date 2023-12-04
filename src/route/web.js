@@ -32,6 +32,13 @@ import {handlePayment,
     handleCheckBooking
 }
     from "../controllers/customers/paymentController.js"
+
+import {getListFlight,
+    getAirport,
+    getListHotelByCity,
+    getHotelOfferSearch
+} 
+from "../controllers/customers/flightController.js"
 let router = express.Router();
 let initWebRoutes = (app)=>{
     router.get('/', (req,res)=>{
@@ -75,8 +82,12 @@ let initWebRoutes = (app)=>{
     router.post('/api/get-all-ticket');
     router.post('/api/add-new-ticket', addNewTicket);
     router.post('/api/update-status-ticket');
-    
-
+    // flight
+    router.post('/api/get-flight-list', getListFlight);
+    router.get('/api/get-airport', getAirport);
+    //hotel
+    router.get('/api/get-hotel-by-city', getListHotelByCity);
+    router.get('/api/get-hotel-offers-search', getHotelOfferSearch);
     return app.use("/", router);
 }
 

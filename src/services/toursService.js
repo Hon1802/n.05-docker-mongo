@@ -85,16 +85,17 @@ export const handleAddNewTour = (
 
 export const handleUpdateTourById = (
     tourId, 
-    nameTour, 
     description, 
     destination, 
+    districtDes,
     region, 
     duration, 
-    displayPrice,
+    durationType,
+    pickUp,
     childPrice, 
     adultPrice, 
-    departureTime,
-    returnTime,
+    openTime,
+    closeTime,
     status = 1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -106,14 +107,17 @@ export const handleUpdateTourById = (
                     { $set: { 
                         name: nameTour,
                         description:description,
+                        destination: destination,
+                        districtDes: districtDes,
                         region: region,
                         destination: destination,
                         duration: duration,
-                        displayPrice: displayPrice,
+                        durationType: durationType,
                         childPrice: childPrice, 
                         adultPrice: adultPrice,
-                        departureTime : departureTime,
-                        returnTime : returnTime,
+                        pickUp: pickUp,
+                        openTime : openTime,
+                        closeTime : closeTime,
                         updatedAt : utcToZonedTime(now, 'Asia/Ho_Chi_Minh'),
                         status : status,
                      } } // Update: Set the urlAvatar field to the new path
