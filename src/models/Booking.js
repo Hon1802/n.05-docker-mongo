@@ -30,6 +30,22 @@ export default mongoose.model('Booking',
             lastName: String,
             gender: String
           }],
+        flight:[{ 
+            depart: String,
+            dest: String,
+            carriers: String,
+            total: Number,
+            currency: String
+          }],
+        hotel:[{ 
+            name: String,
+            startDate: Date,
+            endDay: Date,
+            category: String,
+            adults: Number,
+            total: Number,
+            currency: String
+          }],
         nChildren:{
             type: Number,
         },

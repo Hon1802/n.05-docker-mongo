@@ -11,6 +11,8 @@ export const handleBooking = async (req, res) =>{
     let arrayChild = req.body.arrayChild;
     let arrayAdult = req.body.arrayAdult;
     let totalPrice = req.body.totalPrice;
+    let flight = req.body.flight;
+    let hotel = req.body.hotel;
     if(arrayChild)
     {
         arrayChild = JSON.parse(arrayChild);
@@ -18,6 +20,14 @@ export const handleBooking = async (req, res) =>{
     if(arrayAdult) 
     {
         arrayAdult = JSON.parse(arrayAdult);
+    }
+    if(flight)
+    {
+        flight = JSON.parse(flight);
+    }
+    if(hotel)
+    {
+        hotel = JSON.parse(hotel);
     }
     let nTicketChild = arrayChild ? arrayChild.length : 0;
     let nTicketAdult = arrayAdult ? arrayAdult.length : 0;
@@ -32,6 +42,8 @@ export const handleBooking = async (req, res) =>{
                                                 arrayAdult, 
                                                 nTicketChild,
                                                 nTicketAdult,
+                                                flight,
+                                                hotel,
                                                 status); 
         return res.status(userData.status).json({
           errCode: userData.errCode,

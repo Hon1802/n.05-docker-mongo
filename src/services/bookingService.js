@@ -8,12 +8,15 @@ export const handleAddNewBooking = (
     adult,
     nChildren,
     nAdult,
+    flight,
+    hotel,
     status = 1
     ) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let bookingData = {};
             let isExist = await Booking.findOne({idPayment: paymentId}).exec();
+            // let isExist = false;
             if(isExist)
             {
                 bookingData.status = 400;
@@ -29,6 +32,8 @@ export const handleAddNewBooking = (
                         idPayment : paymentId,
                         children: children,
                         adult: adult,
+                        flight: flight,
+                        hotel: hotel,
                         nChildren: nChildren,
                         nAdult: nAdult,
                         status : status,
@@ -46,7 +51,7 @@ export const handleAddNewBooking = (
                     bookingData.errMessage = 'Error when create'
                     resolve(bookingData)
                 }  
-            }
+            } 
             
         }catch(e){
             let bookingData = {};
