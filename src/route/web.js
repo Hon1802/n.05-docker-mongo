@@ -86,8 +86,8 @@ let initWebRoutes = (app)=>{
     router.post('/api/get-flight-list', getListFlight);
     router.get('/api/get-airport', getAirport);
     //hotel
-    router.get('/api/get-hotel-by-city', getListHotelByCity);
-    router.get('/api/get-hotel-offers-search', getHotelOfferSearch);
+    router.post('/api/get-hotel-by-city', getListHotelByCity);
+    router.post('/api/get-hotel-offers-search', getHotelOfferSearch);
     return app.use("/", router);
 }
 
