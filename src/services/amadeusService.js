@@ -113,3 +113,25 @@ export const handleGetAirport = () =>{
     })
 };
 
+export const getCodeByCity = (city) =>{
+    return new Promise( async (resolve, rejects)=>{
+        let codeCity = '';
+        try{
+            let query = Flight.find();
+            if(!city)
+            {
+                city = 'Ho Chi Minh';
+            }
+            query = query.where('district', new RegExp(city, 'i'));
+            let result = await query.exec();
+            let resultsArray = Array.isArray(result) ? result : [result];
+            let transformedResults = resultsArray.map(item => item.toObject());
+            console.log(transformedResults[0].code_flight);
+            resolve(transformedResults[0].code_flight) 
+           
+        }catch(e){    
+            codeCity = 'SGN';          
+            resolve(codeCity);
+        }
+    })
+}

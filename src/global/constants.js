@@ -1,1 +1,25 @@
 export const MAX_RECORDS = 100
+export const descriptions = [
+    "An excellent retreat with unique design and professional service.",
+    "Experience luxury accommodation with modern spaces and amenities.",
+    "Explore comfortable spaces and stunning views from our hotel.",
+    "An ideal place for a comfortable and well-equipped vacation.",
+    "Professional, warm, and friendly services await you at the hotel.",
+    "A high-class experience with luxurious space and diverse facilities.",
+    "A memorable vacation with great entertainment and dining options.",
+    "Enjoy a cool and tranquil space at our hotel.",
+    "The perfect blend of modernity and tradition at your stay.",
+    "An ideal place to relax and enjoy a great private space.",
+    "Discover the natural beauty around and experience the best services.",
+    "Enjoy spacious and cozy feelings just like home.",
+    "A great location for unique culinary and cultural experiences.",
+    "An ideal place for both business and family vacations.",
+    "Experience luxurious amenities and a high-class living space.",
+    "A memorable stay with sophisticated style and space.",
+    "Enjoy peaceful rest and attentive care services.",
+    "An ideal place to enjoy relaxation and privacy.",
+    "A perfect experience with modern facilities and standard service.",
+    "Experience luxury entertainment activities and services.",
+    "A wonderful place with comfortable spaces and complete amenities.",
+    // Thêm các mô tả khác nếu cần
+  ];

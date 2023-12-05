@@ -1,12 +1,19 @@
 import {
     getToken,
-    handleGetAllAirport
+    handleGetAllAirport,
+    getCodeByCity
 } from "../../services/amadeusService.js" ;
+import {descriptions} from '../../global/constants.js'
+import fs from 'fs'
 import axios from "axios";
 let globalAccessToken = '';
 export const getListFlight = async (req, res) =>{
-    let originLocationCode = req.body.originLocationCode;
-    let destinationLocationCode = req.body.destinationLocationCode;
+    let originLocation = req.body.originLocationCode;
+    originLocation = originLocation.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let originLocationCode = await getCodeByCity(originLocation);
+    let destinationLocation = req.body.destinationLocationCode;
+    destinationLocation = destinationLocation.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let destinationLocationCode = await getCodeByCity(destinationLocation);
     let departureDate = req.body.departureDate;
     let returnDate = req.body.returnDate;
     let adults = req.body.adults;
@@ -39,7 +46,7 @@ export const getListFlight = async (req, res) =>{
     };
     try {
         const response = await axios(config);
-        console.log(response);
+        // console.log(response);
         let flightData = response.data;
         // console.log('Access Token:', accessToken);
         const convertEURtoVND = (eurAmount) => {
@@ -63,7 +70,7 @@ export const getListFlight = async (req, res) =>{
             data: flightData
         }) 
     } catch (error) {
-        console.error('Error fetching Access Token:', error);
+        // console.error('Error fetching Access Token:', error);
         return res.status(400).json({
             errCode: 1,
             message: 'Not found',
@@ -81,8 +88,10 @@ export const getAirport = async (req,res)=>{
 
 //hotel
 export const getListHotelByCity = async (req, res) =>{
-    let cityCode = req.body.cityCode;
-    
+    let city = req.body.cityCode;
+    city = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let cityCode = await getCodeByCity(city);
+    console.log(cityCode);
     let accToken = '';
     if(globalAccessToken){
         console.log('1');
@@ -93,7 +102,7 @@ export const getListHotelByCity = async (req, res) =>{
         globalAccessToken = await getToken();
         accToken = globalAccessToken;
     }
-    console.log(accToken)
+    // console.log(accToken)
     let urlText = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=`+cityCode;
     
     var config = {
@@ -108,18 +117,26 @@ export const getListHotelByCity = async (req, res) =>{
     };
     try {
         const response = await axios(config);
-        console.log(response);
-        let flightData = response.data;
+        // limit 15 record
+        // const dataResponse = response.data.data.slice(0, 15);
+        const dataResponse = response.data.data;
+        dataResponse.forEach((hotel, index) => {
+            let random = Math.floor(Math.random() * 20) + 1;
+            let urlImage = 'src/public/imageHotel/'+random+'.jpg';
+            hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
+            hotel.description = descriptions[random];
+          });
+        let flightData = dataResponse;
         return res.status(200).json({
             errCode: 0,
             message: 'Success',
             data: flightData
         }) 
     } catch (error) {
-        console.error('Error fetching Access Token:', error);
+        // console.error('Error fetching Access Token:', error);
         return res.status(400).json({
             errCode: 1,
-            message: 'Not found',
+            message: 'There are no partner hotels at this location',
         }) 
     }
 }
@@ -142,9 +159,7 @@ export const getHotelOfferSearch = async (req, res) =>{
         globalAccessToken = await getToken();
         accToken = globalAccessToken;
     }
-    console.log(accToken)
-    // let urlText = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=`+hotelIds+`&adults=`+adults;
-    // let urlText = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=`+hotelIds+`&checkInDate=`+checkInDate+`&checkOutDate=`+checkInDate+`&currency=`+currency+`&adults=`+adults;
+    // console.log(accToken)
     let urlText = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=`+hotelIds+`&checkInDate=`+checkInDate+`&checkOutDate=`+checkOutDate+`&currency=`+currency+`&adults=`+adults;
     var config = {
         method: 'get',
@@ -158,7 +173,7 @@ export const getHotelOfferSearch = async (req, res) =>{
     };
     try {
         const response = await axios(config);
-        console.log(response);
+        console.log(response.data);
         let flightData = response.data;
         return res.status(200).json({
             errCode: 0,
