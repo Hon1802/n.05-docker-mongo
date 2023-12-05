@@ -29,15 +29,13 @@ export const getListFlight = async (req, res) =>{
     }
     let accToken = '';
     if(globalAccessToken){
-        console.log('1');
+        // console.log('old token');
         accToken = globalAccessToken;
     } else { 
-        console.log('2');
-        // console.log(await getToken());
+        // console.log('new token');
         globalAccessToken = await getToken();
         accToken = globalAccessToken;
     }
-    console.log(accToken)
     let urlText = `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=`+originLocationCode+`&destinationLocationCode=`+destinationLocationCode+`&departureDate=`+departureDate+`&returnDate=`+returnDate+`&adults=`+adults+`&max=`+max;
     
     var config = {
@@ -52,9 +50,7 @@ export const getListFlight = async (req, res) =>{
     };
     try {
         const response = await axios(config);
-        // console.log(response);
         let flightData = response.data;
-        // console.log('Access Token:', accessToken);
         const convertEURtoVND = (eurAmount) => {
             const exchangeRate = 28000; 
             return eurAmount * exchangeRate;
@@ -100,18 +96,15 @@ export const getListHotelByCity = async (req, res) =>{
         city = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
     let cityCode = await getCodeByCity(city);
-    console.log(cityCode);
     let accToken = '';
     if(globalAccessToken){
-        console.log('1');
+        // console.log('old token');
         accToken = globalAccessToken;
     } else { 
-        console.log('2');
-        // console.log(await getToken());
+        // console.log('new token');
         globalAccessToken = await getToken();
         accToken = globalAccessToken;
     }
-    // console.log(accToken)
     let urlText = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=`+cityCode;
     
     var config = {
@@ -152,7 +145,6 @@ export const getListHotelByCity = async (req, res) =>{
 
 export const getHotelOfferSearch = async (req, res) =>{
     let hotelId = req.body.hotelIds;
-    console.log(hotelId);
     let adults = req.body.adults;
     let checkInDate = req.body.checkInDate;
     let checkOutDate = req.body.checkOutDate;
@@ -161,17 +153,15 @@ export const getHotelOfferSearch = async (req, res) =>{
     
     let accToken = '';
     if(globalAccessToken){
-        console.log('1');
+        // console.log('old token');
         accToken = globalAccessToken;
     } else { 
-        console.log('2');
-        // console.log(await getToken());
+        // console.log('new token');
         globalAccessToken = await getToken();
         accToken = globalAccessToken;
     }
     //
     let HotelIn = await getInforHotelById(hotelId, accToken);
-    // console.log(accToken)
     let urlText = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=`+hotelIds+`&checkInDate=`+checkInDate+`&checkOutDate=`+checkOutDate+`&currency=`+currency+`&adults=`+adults;
     var config = {
         method: 'get',
@@ -200,7 +190,6 @@ export const getHotelOfferSearch = async (req, res) =>{
             hotel.hotel.description = descriptions[random];
             return hotel;
           });
-        //   console.log(flightData);
         return res.status(200).json({
             errCode: 0,
             message: 'Success',

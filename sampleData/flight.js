@@ -45,8 +45,7 @@ export const uploadFlight = async() => {
     const uniqueIds = new Set();
     data.forEach(row =>{
         if (!uniqueIds.has(row.id)) {
-            uniqueIds.add(row.id);
-            console.log(row.id);      
+            uniqueIds.add(row.id);     
             let airport = row.airport;
             let code_flight = row.code_flight;
             let district = row.district;
@@ -55,7 +54,6 @@ export const uploadFlight = async() => {
                 district = district.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             }
             let status = 1;
-            console.log(row)
             handleAddNewFlight(airport,
                 code_flight,
                 district,
