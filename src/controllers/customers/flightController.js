@@ -18,8 +18,13 @@ export const getListFlight = async (req, res) =>{
     if(destinationLocation)
     {
         destinationLocation = destinationLocation.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        if(destinationLocation == "Đa Nang"){
+            destinationLocation = "Da Nang";
+        }
     }
+    console.log(destinationLocation)
     let destinationLocationCode = await getCodeByCity(destinationLocation);
+    console.log(destinationLocationCode)
     let departureDate = req.body.departureDate;
     let returnDate = req.body.returnDate;
     let adults = req.body.adults;

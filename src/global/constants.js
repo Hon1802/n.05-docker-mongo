@@ -21,5 +21,4 @@ export const descriptions = [
     "A perfect experience with modern facilities and standard service.",
     "Experience luxury entertainment activities and services.",
     "A wonderful place with comfortable spaces and complete amenities.",
-    // Thêm các mô tả khác nếu cần
   ];

@@ -26,7 +26,6 @@ export const handleAddNewFlight = (
     })
 };
 export const getToken = async ()=>{
-    // // Thông tin tài khoản Amadeus và các thông tin cần thiết
     const clientId = 'GLugKv0PGNPXsp7A06bTixksoG8tXbfG';
     const clientSecret = 'mmqGevvGG8L4I20p';
     const response_type = 'client_credentials';
