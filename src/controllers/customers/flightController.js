@@ -9,10 +9,16 @@ import axios from "axios";
 let globalAccessToken = '';
 export const getListFlight = async (req, res) =>{
     let originLocation = req.body.originLocationCode;
-    originLocation = originLocation.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if(originLocation)
+    {
+        originLocation = originLocation.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
     let originLocationCode = await getCodeByCity(originLocation);
     let destinationLocation = req.body.destinationLocationCode;
-    destinationLocation = destinationLocation.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if(destinationLocation)
+    {
+        destinationLocation = destinationLocation.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
     let destinationLocationCode = await getCodeByCity(destinationLocation);
     let departureDate = req.body.departureDate;
     let returnDate = req.body.returnDate;
@@ -89,7 +95,10 @@ export const getAirport = async (req,res)=>{
 //hotel
 export const getListHotelByCity = async (req, res) =>{
     let city = req.body.cityCode;
-    city = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if(city)
+    {
+        city = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
     let cityCode = await getCodeByCity(city);
     console.log(cityCode);
     let accToken = '';
@@ -142,12 +151,13 @@ export const getListHotelByCity = async (req, res) =>{
 }
 
 export const getHotelOfferSearch = async (req, res) =>{
-    let hotelIds = req.body.hotelIds;
+    let hotelId = req.body.hotelIds;
+    console.log(hotelId);
     let adults = req.body.adults;
     let checkInDate = req.body.checkInDate;
     let checkOutDate = req.body.checkOutDate;
     let currency = req.body.currency;
-    hotelIds = "MCLONGHM";
+    let hotelIds = "MCLONGHM";
     
     let accToken = '';
     if(globalAccessToken){
@@ -159,6 +169,8 @@ export const getHotelOfferSearch = async (req, res) =>{
         globalAccessToken = await getToken();
         accToken = globalAccessToken;
     }
+    //
+    let HotelIn = await getInforHotelById(hotelId, accToken);
     // console.log(accToken)
     let urlText = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=`+hotelIds+`&checkInDate=`+checkInDate+`&checkOutDate=`+checkOutDate+`&currency=`+currency+`&adults=`+adults;
     var config = {
@@ -173,18 +185,57 @@ export const getHotelOfferSearch = async (req, res) =>{
     };
     try {
         const response = await axios(config);
-        console.log(response.data);
         let flightData = response.data;
+        const updatedHotelData = flightData.data.map((hotel) => {
+            let random = Math.floor(Math.random() * 20) + 1;
+            let urlImage = 'src/public/imageHotel/'+random+'.jpg';
+            hotel.hotel.hotelId = HotelIn[0].hotelId,
+            hotel.hotel.chainCode = HotelIn[0].chainCode,
+            hotel.hotel.dupeId = HotelIn[0].dupeId,
+            hotel.hotel.name = HotelIn[0].name,
+            hotel.hotel.cityCode = HotelIn[0].cityCode,
+            hotel.hotel.latitude = HotelIn[0].latitude,
+            hotel.hotel.longitude = HotelIn[0].longitude,
+            hotel.hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
+            hotel.hotel.description = descriptions[random];
+            return hotel;
+          });
+        //   console.log(flightData);
         return res.status(200).json({
             errCode: 0,
             message: 'Success',
             data: flightData
         }) 
     } catch (error) {
-        console.error('Error fetching Access Token:', error);
+        // console.error('Error fetching Access Token:', error);
         return res.status(400).json({
             errCode: 1,
             message: 'Not found',
         }) 
     }
+}
+
+const getInforHotelById = async (idHotel, accessToken)=>{
+    let urlText = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-hotels?hotelIds=`+idHotel;
+    var config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: urlText,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            'Accept': 'application/json',
+            'authorization': `Bearer ${accessToken}`
+            }
+    };
+    try {
+        const response = await axios(config);
+        const dataResponse = response.data.data;
+        return dataResponse;
+       
+    } catch (error) {
+        // console.error('Error fetching Access Token:', error);
+        let message = 'error';
+        return message;
+    }
+
 }

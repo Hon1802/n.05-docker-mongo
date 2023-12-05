@@ -50,7 +50,10 @@ export const uploadFlight = async() => {
             let airport = row.airport;
             let code_flight = row.code_flight;
             let district = row.district;
-            district = district.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            if(district)
+            {
+                district = district.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            }
             let status = 1;
             console.log(row)
             handleAddNewFlight(airport,
