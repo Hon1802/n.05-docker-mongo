@@ -1,4 +1,4 @@
-import { handleAddNewTour } from "../src/services/toursService.js";
+import { handleAddNewTour, handleUpdateTourWithPlan } from "../src/services/toursService.js";
 import XLSX from 'xlsx';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -97,3 +97,168 @@ export const upload = async() => {
         }
     })
 } 
+export const updatePlan = async() => { 
+    const data = await readExcel(filePath);
+    const uniqueIds = new Set();
+    data.forEach(row =>{
+        if (!uniqueIds.has(row.id)) {
+            uniqueIds.add(row.id);
+            let tourId = row.id;      
+            let day1 = '{' + row.day1 + '}';
+            let day2 = '{' + row.day2 + '}';
+            let day3 = '{' + row.day3 + '}';
+            let day4 = '{' + row.day4 + '}';
+            let day5 = '{' + row.day5 + '}';
+            let day6 = '{' + row.day6 + '}';
+            let day7 = '{' + row.day7 + '}';
+            let day8 = '{' + row.day8 + '}';
+            
+            // if(day1 !== "{}")
+            // {
+            //     console.log('day1')
+            //     let dataArray = day1.split('},{');
+            //     dataArray[0] = dataArray[0].substring(1);
+            //     dataArray[dataArray.length - 1] = dataArray[dataArray.length - 1].slice(0, -1);
+            //     let result = dataArray.map(item => {
+            //         let [time, description] = item.split(': ');
+            //         time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
+            //         return { time, description };
+            //     });
+            //     result.forEach(item => {
+            //         console.log(`Time: ${item.time}, Description: ${item.description}`);
+            //     });
+            //     console.log('\n')
+            // }
+            // if(day2 !== "{}")
+            // {
+            //     console.log('day2')
+            //     let dataArray = day2.split('},{');
+            //     dataArray[0] = dataArray[0].substring(1);
+            //     dataArray[dataArray.length - 1] = dataArray[dataArray.length - 1].slice(0, -1);
+            //     let result = dataArray.map(item => {
+            //         let [time, description] = item.split(': ');
+            //         time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
+            //         return { time, description };
+            //     });
+            //     result.forEach(item => {
+            //         console.log(`Time: ${item.time}, Description: ${item.description}`);
+            //     });
+            //     console.log('\n')
+            // }
+            // if(day3 !== "{}")
+            // {
+            //     console.log('day3')
+            //     let dataArray = day3.split('},{');
+            //     dataArray[0] = dataArray[0].substring(1);
+            //     dataArray[dataArray.length - 1] = dataArray[dataArray.length - 1].slice(0, -1);
+            //     let result = dataArray.map(item => {
+            //         let [time, description] = item.split(': ');
+            //         time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
+            //         return { time, description };
+            //     });
+            //     result.forEach(item => {
+            //         console.log(`Time: ${item.time}, Description: ${item.description}`);
+            //     });
+            //     console.log('\n')
+            // }
+            // if(day4 !== "{}")
+            // {
+            //     console.log('day4')
+            //     let dataArray = day4.split('},{');
+            //     dataArray[0] = dataArray[0].substring(1);
+            //     dataArray[dataArray.length - 1] = dataArray[dataArray.length - 1].slice(0, -1);
+            //     let result = dataArray.map(item => {
+            //         let [time, description] = item.split(': ');
+            //         time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
+            //         return { time, description };
+            //     });
+            //     result.forEach(item => {
+            //         console.log(`Time: ${item.time}, Description: ${item.description}`);
+            //     });
+            //     console.log('\n')
+            // }
+            // if(day5 !== "{}")
+            // {
+            //     console.log('day5')
+            //     let dataArray = day5.split('},{');
+            //     dataArray[0] = dataArray[0].substring(1);
+            //     dataArray[dataArray.length - 1] = dataArray[dataArray.length - 1].slice(0, -1);
+            //     let result = dataArray.map(item => {
+            //         let [time, description] = item.split(': ');
+            //         time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
+            //         return { time, description };
+            //     });
+            //     result.forEach(item => {
+            //         console.log(`Time: ${item.time}, Description: ${item.description}`);
+            //     });
+            //     console.log('\n')
+            // }
+            // if(day6 !== "{}")
+            // {
+            //     console.log('day6')
+            //     let dataArray = day6.split('},{');
+            //     dataArray[0] = dataArray[0].substring(1);
+            //     dataArray[dataArray.length - 1] = dataArray[dataArray.length - 1].slice(0, -1);
+            //     let result = dataArray.map(item => {
+            //         let [time, description] = item.split(': ');
+            //         time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
+            //         return { time, description };
+            //     });
+            //     result.forEach(item => {
+            //         console.log(`Time: ${item.time}, Description: ${item.description}`);
+            //     });
+            //     console.log('\n')
+            // }
+            // if(day7 !== "{}")
+            // {
+            //     console.log('day7')
+            //     let dataArray = day7.split('},{');
+            //     dataArray[0] = dataArray[0].substring(1);
+            //     dataArray[dataArray.length - 1] = dataArray[dataArray.length - 1].slice(0, -1);
+            //     let result = dataArray.map(item => {
+            //         let [time, description] = item.split(': ');
+            //         time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
+            //         return { time, description };
+            //     });
+            //     result.forEach(item => {
+            //         console.log(`Time: ${item.time}, Description: ${item.description}`);
+            //     });
+            //     console.log('\n')
+            // }
+            // if(day8 !== "{}")
+            // {
+            //     console.log('day8')
+            //     let dataArray = day8.split('},{');
+            //     dataArray[0] = dataArray[0].substring(1);
+            //     dataArray[dataArray.length - 1] = dataArray[dataArray.length - 1].slice(0, -1);
+            //     let result = dataArray.map(item => {
+            //         let [time, description] = item.split(': ');
+            //         time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
+            //         return { time, description };
+            //     });
+            //     result.forEach(item => {
+            //         console.log(`Time: ${item.time}, Description: ${item.description}`);
+            //     });
+            //     console.log('\n')
+            // }
+            const days = [day1, day2, day3, day4, day5, day6, day7, day8];
+
+            days.forEach((day, index) => {
+            if (day !== "{}") {
+                // console.log(`day${index + 1}`);
+                let dataArray = day.split('},{');
+                dataArray[0] = dataArray[0].substring(1);
+                dataArray[dataArray.length - 1] = dataArray[dataArray.length - 1].slice(0, -1);
+                let result = dataArray.map(item => {
+                    let [time, description] = item.split(': ');
+                    // time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
+                    return { time, description };
+                });
+                // console.log(tourId);
+                // console.log(result);
+                handleUpdateTourWithPlan(tourId, result);
+            }
+            });
+        }
+    })
+}

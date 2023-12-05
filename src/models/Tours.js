@@ -59,6 +59,10 @@ export default mongoose.model('Tour',
         images:[{ 
             urlImage: String,
           }],
+        plan:[{ 
+            time: String,
+            description: String
+        }],
         status:{
             type: Number,
             required:true        

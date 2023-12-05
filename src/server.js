@@ -3,7 +3,7 @@ import express from "express"
 import viewEngine from "./config/viewEngine.js"
 import initWebRoutes from "./route/web.js"
 import authRoute from "./route/auth.js"
-import { upload } from "../sampleData/addDataTour.js"
+import { upload, updatePlan } from "../sampleData/addDataTour.js"
 import {uploadFlight } from "../sampleData/flight.js"
 
 import connect from "./database/database.js"
@@ -57,6 +57,7 @@ if(loadData)
 {
     // upload();
     // uploadFlight();
+    // updatePlan();
     ttt+=1;
     console.log('upload success');
 }
