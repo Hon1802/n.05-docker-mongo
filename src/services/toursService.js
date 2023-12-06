@@ -373,7 +373,7 @@ export const handleFilter = (
                 let resultsArray = Array.isArray(result) ? result : [result];
                 let transformedResults = resultsArray.map(item => item.toObject());
                 let expiredTours = transformedResults.filter(tour => {
-                    return new Date(tour.closeTime) > new Date();
+                    // return new Date(tour.closeTime) > new Date();
                     return (tour.status === 1) && (new Date(tour.closeTime) > new Date());
                 });     
                 tourData.data = expiredTours;
@@ -441,7 +441,11 @@ export const getLastTour = () =>{
                     urlImageN1: 'newValue' // Thay 'newField' và 'newValue' bằng tên và giá trị bạn muốn thêm
                 };
             });
-            tourData.data = modifiedTours;
+            let expiredTours = modifiedTours.filter(tour => {
+                // return new Date(tour.closeTime) > new Date();
+                return (tour.status === 1) && (new Date(tour.closeTime) > new Date());
+            });     
+            tourData.data = expiredTours;
             tourData.status = 200;
             tourData.errCode = 0;
             tourData.errMessage ='Success'             
