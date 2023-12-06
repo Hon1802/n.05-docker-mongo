@@ -3,7 +3,7 @@ import {
     handleGetAllAirport,
     getCodeByCity
 } from "../../services/amadeusService.js" ;
-import {descriptions, amenities} from '../../global/constants.js'
+import {descriptions, amenities, exchangeRates} from '../../global/constants.js'
 import fs from 'fs'
 import axios from "axios";
 let globalAccessToken = '';
@@ -56,25 +56,54 @@ export const getListFlight = async (req, res) =>{
     try {
         const response = await axios(config);
         let flightData = response.data;
-        const convertEURtoVND = (eurAmount) => {
-            const exchangeRate = 28000; 
-            return eurAmount * exchangeRate;
-        };
         let dataLength = flightData.data.length;
+        let modifiedData =[];
+        function convertToVND(amount, currency) {
+            if (exchangeRates[currency]) {
+                return amount * exchangeRates[currency];
+            } else {
+                return null; // Trả về null nếu không có tỷ giá hối đoái cho đơn vị tiền tệ được cung cấp
+            }
+        }
         for (let i = 0; i < dataLength; i++)
         {
-            let firstFlightOffer = flightData.data[i];
-            if (firstFlightOffer.price.currency === "EUR") {
-                const eurPrice = parseFloat(firstFlightOffer.price.total);
-                const vndPrice = convertEURtoVND(eurPrice).toFixed(2); 
-                firstFlightOffer.price.currency = "VND";
-                firstFlightOffer.price.total = vndPrice.toString();
-            }
+            let itinerary = flightData.data[i].itineraries;
+            let priceTravel = flightData.data[i].price;
+            let travelerPricings = flightData.data[i].travelerPricings;
+            //
+            let classDeparture = travelerPricings[0].fareDetailsBySegment[1];
+            let departure = itinerary[0].segments[0].departure.iataCode;
+            let arrival = itinerary[1].segments[0].departure.iataCode;
+            let numberDeparture = itinerary[0].segments[0].carrierCode + ' - ' +itinerary[0].segments[0].number ;
+            let numberArrival = itinerary[1].segments[0].carrierCode + ' - ' +itinerary[1].segments[0].number ;
+            let round1 = departure + '-->' +arrival;
+            let round2 = arrival + '-->' + departure;
+            let durationRound1 = itinerary[0].duration;
+            let durationRound2 = itinerary[1].duration;
+            let timeRound1 = itinerary[0].segments[0].departure.at;
+            let timeRound2 = itinerary[1].segments[0].departure.at;
+            let { base, fees, grandTotal, ...priceInfo } = priceTravel;
+            priceInfo.total = convertToVND(priceInfo.total, priceInfo.currency);
+            priceInfo.currency = 'VND'
+            priceInfo.total.toFixed(3);
+            modifiedData.push({
+                round1: round1,
+                duration1: durationRound1,
+                timeRound1: timeRound1,
+                numberDeparture: numberDeparture,
+                timeRound2:timeRound2,
+                round2: round2,
+                duration2: durationRound2,
+                numberArrival:numberArrival,
+                classDeparture: classDeparture,
+                priceInfo: priceInfo,
+            });
+        // 
         }
         return res.status(200).json({
             errCode: 0,
             message: 'Success',
-            data: flightData
+            data: modifiedData
         }) 
     } catch (error) {
         // console.error('Error fetching Access Token:', error);
@@ -204,7 +233,7 @@ export const getHotelOfferSearch = async (req, res) =>{
             hotel.offers[0].price.currency = 'VND',
             hotel.offers[0].price.base = basePrice.toFixed(3);
             hotel.offers[0].price.total = totalPrice.toFixed(3);
-            hotel.hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
+            // hotel.hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
             hotel.hotel.description = descriptions[random];
             hotel.hotel.amenities = getRandomElementsFromArray(amenities, 8);
             console.log(hotel.offers[0].price.total * 30622.90);

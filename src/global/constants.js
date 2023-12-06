@@ -56,3 +56,16 @@ export const amenities = [
   "GUARDED_PARKG", 
   "SERV_SPEC_MENU"
 ]
+export const exchangeRates = {
+  EUR: 27000,
+  USD: 23000,
+  GBP: 31000,
+  AUD: 17000,
+  CAD: 18000,
+  JPY: 210,
+  CNY: 3500,
+  KRW: 20,
+  INR: 310,
+  SGD: 17000,
+  HKD: 3000,
+}
