@@ -296,7 +296,8 @@ export const handleGetAllTour = (tourId) =>{
             let tours = await Tour.find().exec();   
             
             let expiredTours = tours.filter(tour => {
-                return new Date(tour.closeTime) > new Date();
+                // return new Date(tour.closeTime) > new Date();
+                return (tour.status === 1) && (new Date(tour.closeTime) > new Date());
             });     
             // console.log(tour.closeTime);
             if(tours)
@@ -305,7 +306,6 @@ export const handleGetAllTour = (tourId) =>{
                 tourData.errCode = 2;
                 tourData.errMessage ='Get tour by id success';
                 tourData.data = expiredTours.map(tour => tour.toObject());
-                console.log(expiredTours.map(tour => tour.toObject()))
                 resolve(tourData)
             }else{
                 tourData.status = 400;

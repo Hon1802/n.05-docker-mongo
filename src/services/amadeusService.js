@@ -129,7 +129,7 @@ export const getCodeByCity = (city) =>{
             resolve(transformedResults[0].code_flight) 
            
         }catch(e){    
-            codeCity = 'SGN';          
+            codeCity = '';          
             resolve(codeCity);
         }
     })
