@@ -58,6 +58,7 @@ export const getListFlight = async (req, res) =>{
         let flightData = response.data;
         let dataLength = flightData.data.length;
         let modifiedData =[];
+        let dictionaries = flightData.dictionaries.carriers;
         function convertToVND(amount, currency) {
             if (exchangeRates[currency]) {
                 return amount * exchangeRates[currency];
@@ -65,6 +66,14 @@ export const getListFlight = async (req, res) =>{
                 return null; // Trả về null nếu không có tỷ giá hối đoái cho đơn vị tiền tệ được cung cấp
             }
         }
+        function getCarrierName(code) {
+            if (dictionaries[code]) {
+                return dictionaries[code];
+            } else {
+                return "VN";
+            }
+        }
+        
         for (let i = 0; i < dataLength; i++)
         {
             let itinerary = flightData.data[i].itineraries;
@@ -75,7 +84,9 @@ export const getListFlight = async (req, res) =>{
             let departure = itinerary[0].segments[0].departure.iataCode;
             let arrival = itinerary[1].segments[0].departure.iataCode;
             let numberDeparture = itinerary[0].segments[0].carrierCode + ' - ' +itinerary[0].segments[0].number ;
+            let nameRound1 = getCarrierName(itinerary[0].segments[0].carrierCode);
             let numberArrival = itinerary[1].segments[0].carrierCode + ' - ' +itinerary[1].segments[0].number ;
+            let nameRound2 = getCarrierName(itinerary[1].segments[0].carrierCode);
             let round1 = departure + '-->' +arrival;
             let round2 = arrival + '-->' + departure;
             let durationRound1 = itinerary[0].duration;
@@ -87,6 +98,8 @@ export const getListFlight = async (req, res) =>{
             priceInfo.currency = 'VND'
             priceInfo.total.toFixed(3);
             modifiedData.push({
+                nameRound1: nameRound1,
+                nameRound2: nameRound2,
                 round1: round1,
                 duration1: durationRound1,
                 timeRound1: timeRound1,
@@ -100,6 +113,7 @@ export const getListFlight = async (req, res) =>{
             });
         // 
         }
+        
         return res.status(200).json({
             errCode: 0,
             message: 'Success',
