@@ -372,7 +372,11 @@ export const handleFilter = (
                 let result = await query.exec(); // result not object, so need to transform to object
                 let resultsArray = Array.isArray(result) ? result : [result];
                 let transformedResults = resultsArray.map(item => item.toObject());
-                tourData.data = transformedResults;
+                let expiredTours = transformedResults.filter(tour => {
+                    return new Date(tour.closeTime) > new Date();
+                    return (tour.status === 1) && (new Date(tour.closeTime) > new Date());
+                });     
+                tourData.data = expiredTours;
                 tourData.status = 200;
                 tourData.errCode = 0;
                 tourData.errMessage ='Success'
