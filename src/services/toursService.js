@@ -122,6 +122,49 @@ export const handleUpdateTourWithPlan = (
         }
     })
 };
+
+// Lấy thời gian hiện tại và chuyển về múi giờ mong muốn
+export const handleUpdateDate = (
+    tourId,
+    openTime,
+    closeTime
+    ) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let tourData = {};
+            if(checkExist(tourId))
+            {
+                const tour = await Tour.updateOne(
+                    { _id: tourId }, // Filter: Find the user with the given id
+                    { $set: { 
+                        openTime: openTime,
+                        closeTime: closeTime
+                     } } // Update: Set the urlAvatar field to the new path
+                  );
+                if (tour.nModified === 0) {
+                // If no user was modified, it means the user with the given id was not found
+                    tourData.status = 400;
+                    tourData.errCode = 4;
+                    tourData.errMessage = 'Tour not found';
+                    resolve(tourData);
+                }
+                tourData.status = 200;
+                tourData.errCode = 0; // Assuming 0 means success
+                tourData.errMessage = 'Uploaded successfully';
+                resolve(tourData);
+            } else{
+                console.log('no1111')
+            }
+        }catch(e){
+            let tourData = {};
+            tourData.status = 400;
+            tourData.errCode = 3;
+            tourData.errMessage ='Tour was not created'             
+            resolve(tourData)
+        }
+    })
+};
+
 export const handleUpdateTourById = (
     tourId, 
     description, 

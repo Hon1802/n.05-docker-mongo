@@ -132,7 +132,7 @@ export const getListHotelByCity = async (req, res) =>{
         dataResponse.forEach((hotel, index) => {
             let random = Math.floor(Math.random() * 20) + 1;
             let urlImage = 'src/public/imageHotel/'+random+'.jpg';
-            // hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
+            hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
             hotel.description = descriptions[random];
           });
         let flightData = dataResponse;

@@ -1,4 +1,6 @@
-import { handleAddNewTour, handleUpdateTourWithPlan } from "../src/services/toursService.js";
+import { handleAddNewTour, 
+    handleUpdateTourWithPlan,
+    handleUpdateDate } from "../src/services/toursService.js";
 import XLSX from 'xlsx';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -66,10 +68,10 @@ export const upload = async() => {
             const unixTimeClose = (row.closeTime - 25569) * 86400 * 1000;
             const dateValueClose = new Date(unixTimeClose);
             const dateObjClose = new Date(dateValueClose); // Tạo đối tượng Date từ chuỗi ngày tháng
-            const monthC = (dateObjClose.getMonth() + 1).toString().padStart(2, '0'); // Lấy tháng và định dạng thành 2 chữ số
-            const dayC = dateObjClose.getDate().toString().padStart(2, '0'); // Lấy ngày và định dạng thành 2 chữ số
-            const yearC = dateObjClose.getFullYear(); // Lấy năm
-            const formattedDateC = `${month}-${day}-${year}`; // Tạo chuỗi ngày tháng theo định dạng 'mm-dd-yyyy'
+            const monthC = (dateObjClose.getMonth() + 1).toString().padStart(2, '0'); 
+            const dayC = dateObjClose.getDate().toString().padStart(2, '0'); 
+            const yearC = dateObjClose.getFullYear(); // Lấy năm 
+            const formattedDateC = `${monthC}-${dayC}-${yearC}`; 
             let closeTime = formattedDateC; 
             let status = row.status; 
             let url1 = row.urlImage1;
@@ -259,6 +261,34 @@ export const updatePlan = async() => {
                 handleUpdateTourWithPlan(tourId, result);
             }
             });
+        }
+    })
+}
+export const updateDate = async() => { 
+    const data = await readExcel(filePath);
+    const uniqueIds = new Set();
+    data.forEach(row =>{
+        if (!uniqueIds.has(row.id)) {
+            uniqueIds.add(row.id);
+            let tourId = row.id;      
+            const unixTime = (row.openTIme - 25569) * 86400 * 1000;
+            const dateValue = new Date(unixTime);
+            const dateObj = new Date(dateValue); // Tạo đối tượng Date từ chuỗi ngày tháng
+            const month = (dateObj.getMonth() + 1).toString().padStart(2, '0'); // Lấy tháng và định dạng thành 2 chữ số
+            const day = dateObj.getDate().toString().padStart(2, '0'); // Lấy ngày và định dạng thành 2 chữ số
+            const year = dateObj.getFullYear(); // Lấy năm 
+            const formattedDate = `${month}-${day}-${year}`; // Tạo chuỗi ngày tháng theo định dạng 'mm-dd-yyyy'
+            let openTime = formattedDate; 
+            const unixTimeClose = (row.closeTime - 25569) * 86400 * 1000;
+            const dateValueClose = new Date(unixTimeClose);
+            const dateObjClose = new Date(dateValueClose); // Tạo đối tượng Date từ chuỗi ngày tháng
+            const monthC = (dateObjClose.getMonth() + 1).toString().padStart(2, '0'); 
+            const dayC = dateObjClose.getDate().toString().padStart(2, '0'); 
+            const yearC = dateObjClose.getFullYear(); // Lấy năm 
+            const formattedDateC = `${monthC}-${dayC}-${yearC}`; 
+            let closeTime = formattedDateC;
+            handleUpdateDate(tourId, openTime, closeTime);
+
         }
     })
 }
