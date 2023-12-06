@@ -293,14 +293,19 @@ export const handleGetAllTour = (tourId) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let tourData = {};
-            let tours = await Tour.find().exec();        
+            let tours = await Tour.find().exec();   
+            
+            let expiredTours = tours.filter(tour => {
+                return new Date(tour.closeTime) > new Date();
+            });     
+            // console.log(tour.closeTime);
             if(tours)
             {   
                 tourData.status = 200;
                 tourData.errCode = 2;
                 tourData.errMessage ='Get tour by id success';
-                tourData.data = tours.map(tour => tour.toObject());
-                console.log(tours.map(tour => tour.toObject()))
+                tourData.data = expiredTours.map(tour => tour.toObject());
+                console.log(expiredTours.map(tour => tour.toObject()))
                 resolve(tourData)
             }else{
                 tourData.status = 400;
