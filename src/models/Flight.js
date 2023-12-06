@@ -14,6 +14,9 @@ export default mongoose.model('Flight',
             type: String,
             required:true        
         },
+        include_district:{
+            type: String,       
+        },
         status:{
             type:String,
             required:true        

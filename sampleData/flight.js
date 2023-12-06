@@ -54,9 +54,11 @@ export const uploadFlight = async() => {
                 district = district.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             }
             let status = 1;
+            let include_district = row.include_district;
             handleAddNewFlight(airport,
                 code_flight,
                 district,
+                include_district,
                 status)
         }
     })

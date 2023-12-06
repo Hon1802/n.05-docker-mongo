@@ -5,6 +5,7 @@ export const handleAddNewFlight = (
    airport,
    code_flight,
    district,
+   include_district,
    status=1) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
@@ -14,6 +15,7 @@ export const handleAddNewFlight = (
                     airport: airport,
                     code_flight: code_flight,
                     district: district,
+                    include_district: include_district,
                     status : status,
                 })
                 console.log('Tour was create');
@@ -121,7 +123,7 @@ export const getCodeByCity = (city) =>{
             {
                 city = 'Ho Chi Minh';
             }
-            query = query.where('district', new RegExp(city, 'i'));
+            query = query.where('include_district', new RegExp(city, 'i'));
             let result = await query.exec();
             let resultsArray = Array.isArray(result) ? result : [result];
             let transformedResults = resultsArray.map(item => item.toObject());
