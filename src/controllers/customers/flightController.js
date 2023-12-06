@@ -98,6 +98,7 @@ export const getListFlight = async (req, res) =>{
             priceInfo.currency = 'VND'
             priceInfo.total.toFixed(3);
             modifiedData.push({
+                id: i,
                 nameRound1: nameRound1,
                 nameRound2: nameRound2,
                 round1: round1,
