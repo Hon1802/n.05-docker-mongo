@@ -181,7 +181,7 @@ export const getHotelOfferSearch = async (req, res) =>{
             'authorization': `Bearer ${accToken}`
             }
     };
-    // try {
+    try {
         const response = await axios(config);
         let flightData = response.data;
         function getRandomElementsFromArray(arr, n) {
@@ -215,15 +215,15 @@ export const getHotelOfferSearch = async (req, res) =>{
             message: 'Success',
             data: flightData
         }) 
-    // } catch (error) {
-    //     // console.error('Error fetching Access Token:', error);
-    //     let flightData = '[{}]';
-    //     return res.status(200).json({
-    //         errCode: 0,
-    //         message: 'Success',
-    //         data: flightData
-    //     }) 
-    // }
+    } catch (error) {
+        // console.error('Error fetching Access Token:', error);
+        let flightData = '[{}]';
+        return res.status(200).json({
+            errCode: 0,
+            message: 'Success',
+            data: flightData
+        }) 
+    }
 }
 
 const getInforHotelById = async (idHotel, accessToken)=>{
