@@ -157,9 +157,8 @@ export const getHotelOfferSearch = async (req, res) =>{
     let adults = req.body.adults;
     let checkInDate = req.body.checkInDate;
     let checkOutDate = req.body.checkOutDate;
-    let currency = req.body.currency;
     let hotelIds = "MCLONGHM";
-    
+    let currency = 'USD';
     let accToken = '';
     if(globalAccessToken){
         // console.log('old token');
@@ -182,7 +181,7 @@ export const getHotelOfferSearch = async (req, res) =>{
             'authorization': `Bearer ${accToken}`
             }
     };
-    try {
+    // try {
         const response = await axios(config);
         let flightData = response.data;
         function getRandomElementsFromArray(arr, n) {
@@ -192,6 +191,8 @@ export const getHotelOfferSearch = async (req, res) =>{
         const updatedHotelData = flightData.data.map((hotel) => {
             let random = Math.floor(Math.random() * 20) + 1;
             let urlImage = 'src/public/imageHotel/'+random+'.jpg';
+            let totalPrice = hotel.offers[0].price.total * 30.622
+            let basePrice = hotel.offers[0].price.base * 30.622
             hotel.hotel.hotelId = HotelIn[0].hotelId,
             hotel.hotel.chainCode = HotelIn[0].chainCode,
             hotel.hotel.dupeId = HotelIn[0].dupeId,
@@ -199,9 +200,14 @@ export const getHotelOfferSearch = async (req, res) =>{
             hotel.hotel.cityCode = HotelIn[0].cityCode,
             hotel.hotel.latitude = HotelIn[0].latitude,
             hotel.hotel.longitude = HotelIn[0].longitude,
-            hotel.hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
+            hotel.offers[0].price.variations = '',
+            hotel.offers[0].price.currency = 'VND',
+            hotel.offers[0].price.base = basePrice.toFixed(3);
+            hotel.offers[0].price.total = totalPrice.toFixed(3);
+            // hotel.hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
             hotel.hotel.description = descriptions[random];
             hotel.hotel.amenities = getRandomElementsFromArray(amenities, 8);
+            console.log(hotel.offers[0].price.total * 30622.90);
             return hotel;
           });
         return res.status(200).json({
@@ -209,15 +215,15 @@ export const getHotelOfferSearch = async (req, res) =>{
             message: 'Success',
             data: flightData
         }) 
-    } catch (error) {
-        // console.error('Error fetching Access Token:', error);
-        let flightData = '[{}]';
-        return res.status(200).json({
-            errCode: 0,
-            message: 'Success',
-            data: flightData
-        }) 
-    }
+    // } catch (error) {
+    //     // console.error('Error fetching Access Token:', error);
+    //     let flightData = '[{}]';
+    //     return res.status(200).json({
+    //         errCode: 0,
+    //         message: 'Success',
+    //         data: flightData
+    //     }) 
+    // }
 }
 
 const getInforHotelById = async (idHotel, accessToken)=>{
