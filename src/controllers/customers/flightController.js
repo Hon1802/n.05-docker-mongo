@@ -116,7 +116,7 @@ export const getListFlight = async (req, res) =>{
         }
         
         return res.status(200).json({
-            errCode: 0,
+            errCode: 0, 
             message: 'Success',
             data: modifiedData
         }) 
@@ -248,7 +248,7 @@ export const getHotelOfferSearch = async (req, res) =>{
             hotel.offers[0].price.currency = 'VND',
             hotel.offers[0].price.base = basePrice.toFixed(3);
             hotel.offers[0].price.total = totalPrice.toFixed(3);
-            // hotel.hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
+            hotel.hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
             hotel.hotel.description = descriptions[random];
             hotel.hotel.amenities = getRandomElementsFromArray(amenities, 8);
             console.log(hotel.offers[0].price.total * 30622.90);
