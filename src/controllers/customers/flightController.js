@@ -3,7 +3,7 @@ import {
     handleGetAllAirport,
     getCodeByCity
 } from "../../services/amadeusService.js" ;
-import {descriptions} from '../../global/constants.js'
+import {descriptions, amenities} from '../../global/constants.js'
 import fs from 'fs'
 import axios from "axios";
 let globalAccessToken = '';
@@ -78,9 +78,11 @@ export const getListFlight = async (req, res) =>{
         }) 
     } catch (error) {
         // console.error('Error fetching Access Token:', error);
-        return res.status(400).json({
-            errCode: 1,
-            message: 'Not found',
+        let flightData = '[{}]';
+        return res.status(200).json({
+            errCode: 0,
+            message: 'Success',
+            data: flightData
         }) 
     }
 }
@@ -130,7 +132,7 @@ export const getListHotelByCity = async (req, res) =>{
         dataResponse.forEach((hotel, index) => {
             let random = Math.floor(Math.random() * 20) + 1;
             let urlImage = 'src/public/imageHotel/'+random+'.jpg';
-            hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
+            // hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
             hotel.description = descriptions[random];
           });
         let flightData = dataResponse;
@@ -141,9 +143,11 @@ export const getListHotelByCity = async (req, res) =>{
         }) 
     } catch (error) {
         // console.error('Error fetching Access Token:', error);
-        return res.status(400).json({
-            errCode: 1,
-            message: 'There are no partner hotels at this location',
+        let flightData = '[{}]';
+        return res.status(200).json({
+            errCode: 0,
+            message: 'Success',
+            data: flightData
         }) 
     }
 }
@@ -181,6 +185,10 @@ export const getHotelOfferSearch = async (req, res) =>{
     try {
         const response = await axios(config);
         let flightData = response.data;
+        function getRandomElementsFromArray(arr, n) {
+            const shuffled = arr.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, n);
+          }
         const updatedHotelData = flightData.data.map((hotel) => {
             let random = Math.floor(Math.random() * 20) + 1;
             let urlImage = 'src/public/imageHotel/'+random+'.jpg';
@@ -193,6 +201,7 @@ export const getHotelOfferSearch = async (req, res) =>{
             hotel.hotel.longitude = HotelIn[0].longitude,
             hotel.hotel.image = fs.readFileSync(urlImage, {encoding: 'base64'});
             hotel.hotel.description = descriptions[random];
+            hotel.hotel.amenities = getRandomElementsFromArray(amenities, 8);
             return hotel;
           });
         return res.status(200).json({
@@ -202,9 +211,11 @@ export const getHotelOfferSearch = async (req, res) =>{
         }) 
     } catch (error) {
         // console.error('Error fetching Access Token:', error);
-        return res.status(400).json({
-            errCode: 1,
-            message: 'Not found',
+        let flightData = '[{}]';
+        return res.status(200).json({
+            errCode: 0,
+            message: 'Success',
+            data: flightData
         }) 
     }
 }
