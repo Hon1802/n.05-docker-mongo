@@ -1,5 +1,7 @@
 import { MAX_RECORDS } from "../../global/constants.js"
-import {handleGetTourOrder} from "../../services/toursService.js" ;
+import {handleGetTourOrder,
+    handleGetTourOrderById
+} from "../../services/toursService.js" ;
 //manage tour
 
 //manage order
@@ -7,6 +9,23 @@ import {handleGetTourOrder} from "../../services/toursService.js" ;
 export const getAllOrder = async (req, res) =>{
     try{
         let tourData = await handleGetTourOrder();
+        return res.status(tourData.status).json({
+            errCode: tourData.errCode,
+            message: tourData.errMessage,
+            tourData
+        }) 
+    }catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Error when get',
+        }) 
+    }
+}
+export const getOrderById = async (req, res) =>{
+    try{
+        let id = req.body.id;
+        let tourData = await handleGetTourOrderById(id);
         return res.status(tourData.status).json({
             errCode: tourData.errCode,
             message: tourData.errMessage,

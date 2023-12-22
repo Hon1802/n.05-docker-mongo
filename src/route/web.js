@@ -43,7 +43,8 @@ import {getListFlight,
 } 
 from "../controllers/customers/flightController.js"
 import {
-    getAllOrder
+    getAllOrder,
+    getOrderById
 } from "../controllers/admins/adminController.js"
 let router = express.Router();
 let initWebRoutes = (app)=>{
@@ -87,7 +88,7 @@ let initWebRoutes = (app)=>{
     router.post('/api/admin/get-all-user', getAllUser);
     router.post('/api/admin/remove-account', removeUserById);
     router.post('/api/admin/get-all-order-tour', getAllOrder);
-    
+    router.post('/api/admin/get-order-by-id', getOrderById);
     //ticket
     //get ticket by id
     router.post('/api/get-ticket-by-id');

@@ -310,7 +310,44 @@ export const handleGetTourOrder = () =>{
         }
     });
 };
-//upload images
+//upload
+export const handleGetTourOrderById = (id) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let tourData = {};
+            let allTasks = [];
+            let isExist = await Booking.find({_id: id}).exec();  
+            console.log(isExist); 
+            let updatedTours = await Promise.all(isExist.map(async tourRegister => {
+                let idFind = tourRegister.idTour;
+                let idPayment = tourRegister.idPayment;
+                let tourRe = await handleGetInformationTourById(idFind);
+                let paymentRe = await handleGetInformationPaymentById(idPayment);
+                return { ...tourRegister.toObject(), dataT: tourRe , totalPrice : paymentRe[0].totalPrice}; 
+            }));
+            if (isExist.length === 0) {
+                // Nếu không có tour nào được tìm thấy, xử lý lỗi
+                tourData.status = 400;
+                tourData.errCode = 4;
+                tourData.errMessage = 'User not found';
+                resolve(tourData);
+            } else {
+                tourData.status = 200;
+                tourData.errCode = 0; // Giả sử 0 có nghĩa là thành công
+                tourData.errMessage = 'success';
+                tourData.data = updatedTours;
+                resolve(tourData);
+            }
+           
+        }catch(e){
+            let tourData= {};
+            tourData.status = 400;
+            tourData.errCode = 3;
+            tourData.errMessage ='Your account was not created';             
+            resolve(tourData);
+        }
+    });
+};
 export const uploadImages = (paths, idTour) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
