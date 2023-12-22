@@ -33,14 +33,14 @@ export const getListFlight = async (req, res) =>{
         max = 5;
     }
     let accToken = '';
-    if(globalAccessToken){
-        // console.log('old token');
-        accToken = globalAccessToken;
-    } else { 
+    // if(globalAccessToken){
+    //     // console.log('old token');
+    //     accToken = globalAccessToken;
+    // } else { 
         // console.log('new token');
         globalAccessToken = await getToken();
         accToken = globalAccessToken;
-    }
+    // }
     let urlText = `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=`+originLocationCode+`&destinationLocationCode=`+destinationLocationCode+`&departureDate=`+departureDate+`&returnDate=`+returnDate+`&adults=`+adults+`&max=`+max;
     
     var config = {
@@ -148,14 +148,14 @@ export const getListHotelByCity = async (req, res) =>{
     }
     let cityCode = await getCodeByCity(city);
     let accToken = '';
-    if(globalAccessToken){
-        // console.log('old token');
-        accToken = globalAccessToken;
-    } else { 
+    // if(globalAccessToken){
+    //     // console.log('old token');
+    //     accToken = globalAccessToken;
+    // } else { 
         // console.log('new token');
         globalAccessToken = await getToken();
         accToken = globalAccessToken;
-    }
+    // }
     let urlText = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=`+cityCode;
     
     var config = {
@@ -204,14 +204,14 @@ export const getHotelOfferSearch = async (req, res) =>{
     let hotelIds = "MCLONGHM";
     let currency = 'USD';
     let accToken = '';
-    if(globalAccessToken){
-        // console.log('old token');
-        accToken = globalAccessToken;
-    } else { 
+    // if(globalAccessToken){
+    //     // console.log('old token');
+    //     accToken = globalAccessToken;
+    // } else { 
         // console.log('new token');
         globalAccessToken = await getToken();
         accToken = globalAccessToken;
-    }
+    // }
     //
     let HotelIn = await getInforHotelById(hotelId, accToken);
     let urlText = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=`+hotelIds+`&checkInDate=`+checkInDate+`&checkOutDate=`+checkOutDate+`&currency=`+currency+`&adults=`+adults;

@@ -49,3 +49,28 @@ export const handleAddNewPayment = (
         }
     })
 };
+
+// get by id
+export const handleGetInformationPaymentById =async (paymentId) =>{
+    try{
+        let tourData = {};
+        // let isExist = await Tour.findOne({_id: tourId }).exec()  
+        const query = { idPayment: paymentId };   
+        let isExist = await Payment.findOne(query);  
+        let modifiedData =[];      
+        if(isExist)
+        {   
+            tourData.data = {
+                ...isExist.toObject()
+            }
+            
+            modifiedData.push({
+                totalPrice : tourData.data.totalPrice || 'none',
+            })
+        }
+        return modifiedData
+    }catch(e){
+        let modifiedData =[];   
+        return modifiedData  
+    }
+};

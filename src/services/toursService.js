@@ -1,6 +1,10 @@
-import { Ticket, Tour } from "../models/index.js"
+import { Ticket, Tour, Booking } from "../models/index.js"
+import {
+    handleGetInformationPaymentById
+} from "./paymentService.js"
 import { utcToZonedTime } from 'date-fns-tz'
 const now = new Date();
+
 // Lấy thời gian hiện tại và chuyển về múi giờ mong muốn
 export const handleAddNewTour = (
     name, 
@@ -227,7 +231,85 @@ export const handleUpdateTourById = (
         }
     });
 };
-
+export const handleGetTourRegister = (idUser) =>{
+    return new Promise( async (resolve, rejects)=>{
+        // try{
+            let tourData = {};
+            let allTasks = [];
+            let isExist = await Booking.find({idUser: idUser }).exec();   
+            // isExist.forEach( async tourRegister=>{
+            //     let idFind = tourRegister.idTour;
+            //     console.log(idFind)
+            //     let tourRe = await handleGetInformationTourById(idFind);
+            //     tourRegister.push ({
+            //         dataT : tourRe
+            //     })
+            //     // allTasks = allTasks.concat(tourRe);
+            // });
+            let updatedTours = await Promise.all(isExist.map(async tourRegister => {
+                let idFind = tourRegister.idTour;
+                let tourRe = await handleGetInformationTourById(idFind);
+                return { ...tourRegister.toObject(), dataT: tourRe }; 
+            }));
+            if (isExist.length === 0) {
+                // Nếu không có tour nào được tìm thấy, xử lý lỗi
+                tourData.status = 400;
+                tourData.errCode = 4;
+                tourData.errMessage = 'User not found';
+                resolve(tourData);
+            } else {
+                tourData.status = 200;
+                tourData.errCode = 0; // Giả sử 0 có nghĩa là thành công
+                tourData.errMessage = 'success';
+                tourData.data = updatedTours;
+                resolve(tourData);
+            }
+           
+        // }catch(e){
+        //     let tourData= {};
+        //     tourData.status = 400;
+        //     tourData.errCode = 3;
+        //     tourData.errMessage ='Your account was not created';             
+        //     resolve(tourData);
+        // }
+    });
+};
+export const handleGetTourOrder = () =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let tourData = {};
+            let allTasks = [];
+            let isExist = await Booking.find().exec();   
+            let updatedTours = await Promise.all(isExist.map(async tourRegister => {
+                let idFind = tourRegister.idTour;
+                let idPayment = tourRegister.idPayment;
+                let tourRe = await handleGetInformationTourById(idFind);
+                let paymentRe = await handleGetInformationPaymentById(idPayment);
+                return { ...tourRegister.toObject(), dataT: tourRe , totalPrice : paymentRe[0].totalPrice}; 
+            }));
+            if (isExist.length === 0) {
+                // Nếu không có tour nào được tìm thấy, xử lý lỗi
+                tourData.status = 400;
+                tourData.errCode = 4;
+                tourData.errMessage = 'User not found';
+                resolve(tourData);
+            } else {
+                tourData.status = 200;
+                tourData.errCode = 0; // Giả sử 0 có nghĩa là thành công
+                tourData.errMessage = 'success';
+                tourData.data = updatedTours;
+                resolve(tourData);
+            }
+           
+        }catch(e){
+            let tourData= {};
+            tourData.status = 400;
+            tourData.errCode = 3;
+            tourData.errMessage ='Your account was not created';             
+            resolve(tourData);
+        }
+    });
+};
 //upload images
 export const uploadImages = (paths, idTour) =>{
     return new Promise( async (resolve, rejects)=>{
@@ -330,6 +412,35 @@ export const handleGetTourById = (tourId) =>{
             resolve(tourData)
         }
     })
+};
+// get by id
+export const handleGetInformationTourById =async (tourId) =>{
+        try{
+            let tourData = {};
+            // let isExist = await Tour.findOne({_id: tourId }).exec()  
+            const query = { _id: tourId };   
+            let isExist = await Tour.findOne(query);  
+            let modifiedData =[];      
+            if(isExist)
+            {   
+                tourData.data = {
+                    ...isExist.toObject()
+                }
+                
+                modifiedData.push({
+                    name : tourData.data.name || 'none',
+                    destination : tourData.data.destination || "none", 
+                    description : tourData.data.description || 'none',
+                    childPrice : tourData.data.childPrice || 'none',
+                    adultPrice : tourData.data.adultPrice || 'none',
+                    pickUp : tourData.data.pickUp || 'none',
+                })
+            }
+            return modifiedData
+        }catch(e){
+            let modifiedData =[];   
+            return modifiedData  
+        }
 };
 //get all tour
 export const handleGetAllTour = (tourId) =>{

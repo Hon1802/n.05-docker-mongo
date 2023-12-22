@@ -7,7 +7,9 @@ import {
     updateById,
     updatePassword,
     changeStatusUser,
-    handleUserLogOut
+    handleUserLogOut,
+    handleGetAllUser,
+    handleRemove
 } from "../../services/userService.js" ;
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -186,6 +188,23 @@ export const getUserById = async (req, res) => {
         }) 
     }
 }
+//  getAllUser
+export const getAllUser = async (req, res) => {
+    try{
+        let userData = await handleGetAllUser();
+        return res.status(userData.status).json({
+            errCode: userData.errCode,
+            message: userData.message,
+            userData
+        })
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
 // update information by id
 export const updateInfoById = async (req, res) => {
     try {
@@ -235,6 +254,24 @@ export const deleteUserById = async (req, res) => {
         let userId = req.body.id;
         let password = req.body.password;
         let userData = await changeStatusUser(userId, password);
+        return res.status(userData.status).json({
+            errCode: userData.errCode,
+            message: userData.message,
+            userData
+        }) 
+    } catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Not found',
+        }) 
+    }
+}
+//remove
+export const removeUserById = async (req, res) => {
+    try {
+        let userId = req.body.id;
+        let userData = await handleRemove(userId);
         return res.status(userData.status).json({
             errCode: userData.errCode,
             message: userData.message,

@@ -60,6 +60,7 @@ export default mongoose.model('Tour',
             urlImage: String,
           }],
         plan:[{ 
+            day: String,
             time: String,
             description: String
         }],

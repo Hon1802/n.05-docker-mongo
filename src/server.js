@@ -53,16 +53,15 @@ initWebRoutes(app);
 authRoute(app);  
 let ttt = 0;
 const loadData = false;
-if(loadData)
-{
-    // upload();
-    // uploadFlight();
-    // updatePlan();
-    // updateDate();
-    ttt+=1;
-    console.log('upload success');
-}
-console.log(ttt)
+// if(loadData)
+// {
+//     upload();
+//     uploadFlight();
+//     updatePlan();
+//     updateDate();
+//     console.log('upload success');
+// }
+
 app.listen(port, () =>{
     console.log('run on : ' + port); 
 }) 

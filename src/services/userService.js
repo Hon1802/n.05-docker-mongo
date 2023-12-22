@@ -9,7 +9,7 @@ export const handleUserLogin = (email, password, userData = {}) =>{
     return new Promise( async (resolve, rejects)=>{
         try{
             let isExist = await User.findOne({email}).exec();
-            if(isExist && isExist.status == 1)
+            if(isExist && isExist.status == 1 || isExist && isExist.status == 999)
             {   
                 //check password compare with password encrypt     
                 let isMatch = await bcrypt.compare(password,isExist.password)
@@ -102,7 +102,7 @@ export const handleUserRegister = (fullName, address, email,password, phone, gen
                 userData.errMessage = 'Email exists';
                 resolve(userData)
 
-            }else{
+            }else{ 
                 try {
                     const hashedPassword = await bcrypt.hash(password,parseInt(salt_rounds))
                     //insert db
@@ -191,6 +191,35 @@ export const getById = (userId) =>{
                 userData.status = 400;
                 userData.errCode = 3;
                 userData.errMessage ='Error connect'
+                resolve(userData) 
+            }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='Your account was not created'         
+            rejects(userData)
+        }
+    })
+};
+//get by id
+export const handleGetAllUser = () =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            
+            let userData = {};
+            let isExist = await User.find({status : '1'}).exec(); 
+            if(isExist && isExist.length > 0)
+            {   
+                userData.errCode = 0;
+                userData.errMessage ='Get user success';
+                userData.data = isExist;
+                userData.status = 200;
+                resolve(userData)
+            }else{
+                userData.status = 400;
+                userData.errCode = 3;
+                userData.errMessage ='No user can get'
                 resolve(userData) 
             }
         }catch(e){
@@ -315,6 +344,25 @@ export const changeStatusUser = (userId, password) =>{
                 userData.errMessage ='Your account not exist'
                 resolve(userData)
             }
+        }catch(e){
+            let userData = {};
+            userData.status = 400;
+            userData.errCode = 3;
+            userData.errMessage ='Error connect'
+            resolve(userData)
+        }
+    })
+};
+//handle Remove
+export const handleRemove = (userId) =>{
+    return new Promise( async (resolve, rejects)=>{
+        try{
+            let userData = {};
+            const user = await User.deleteOne({ _id: userId })
+            userData.status = 200;
+            userData.errCode = 0;
+            userData.errMessage = 'Success';
+            resolve(userData);
         }catch(e){
             let userData = {};
             userData.status = 400;

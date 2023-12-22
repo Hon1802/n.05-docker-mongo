@@ -256,9 +256,9 @@ export const updatePlan = async() => {
                     // time = time.slice(1); // Loại bỏ dấu ngoặc đơn ở đầu
                     return { time, description };
                 });
-                // console.log(tourId);
-                // console.log(result);
-                handleUpdateTourWithPlan(tourId, result);
+                console.log(tourId);
+                console.log(result);
+                // handleUpdateTourWithPlan(tourId, result);
             }
             });
         }

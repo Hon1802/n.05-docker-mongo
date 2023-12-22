@@ -1,5 +1,25 @@
 import { MAX_RECORDS } from "../../global/constants.js"
-const productService = require("../../services/productService.js") ;
+import {handleGetTourOrder} from "../../services/toursService.js" ;
+//manage tour
+
+//manage order
+
+export const getAllOrder = async (req, res) =>{
+    try{
+        let tourData = await handleGetTourOrder();
+        return res.status(tourData.status).json({
+            errCode: tourData.errCode,
+            message: tourData.errMessage,
+            tourData
+        }) 
+    }catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Error when get',
+        }) 
+    }
+}
 //manage customer
 let getAllCustomer = async (req,res) =>{
     let {page = 1 , size = MAX_RECORDS , searchString=''}=req.query
@@ -82,12 +102,3 @@ let statisticalByMon = async (req,res) =>{
     }) 
 }
 
-module.exports ={
-    getAllCustomer:getAllCustomer,
-    getCustomerById:getCustomerById,
-    editCustomer:editCustomer,
-    deleteCustomer:deleteCustomer,
-    statisticalByDay:statisticalByDay, 
-    statisticalByWeek:statisticalByWeek,
-    statisticalByMon:statisticalByMon
-}

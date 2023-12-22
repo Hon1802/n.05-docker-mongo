@@ -8,7 +8,9 @@ import { handleLogin,
          getUserById,
          updateInfoById,
          deleteUserById,
-         updateNewPassword
+         updateNewPassword,
+         getAllUser,
+         removeUserById
         } 
     from "../controllers/customers/userController.js" ;
 import {
@@ -24,7 +26,8 @@ from "../controllers/admins/ticketController.js"
 import {
     filterTour,
     latestTour,
-    hotTour
+    hotTour,
+    getTourRegister
 }
 from "../controllers/customers/customerController.js"
 import {handlePayment,
@@ -39,6 +42,9 @@ import {getListFlight,
     getHotelOfferSearch
 } 
 from "../controllers/customers/flightController.js"
+import {
+    getAllOrder
+} from "../controllers/admins/adminController.js"
 let router = express.Router();
 let initWebRoutes = (app)=>{
     router.get('/', (req,res)=>{
@@ -57,6 +63,7 @@ let initWebRoutes = (app)=>{
     router.post('/api/personal', getUserById);
     router.post('/api/update-by-id', updateInfoById);
     router.post('/api/delete-account', deleteUserById);
+    
     //tour
     //get tour by id
     router.post('/api/get-tour-by-id',getTourById );
@@ -70,12 +77,17 @@ let initWebRoutes = (app)=>{
     router.post('/api/filter-tour', filterTour);
     router.post('/api/hot-tour', filterTour);
     router.get('/api/latest-tour', latestTour);
+    router.post('/api/get-tour-register',  getTourRegister);
     //Booking
     router.post('/api/create-booking', handleBooking);
     router.post('/api/check-booking', handleCheckBooking);
     router.get('/api/hot-tour', hotTour);
     router.post('/api/create-payment', handlePayment);
-
+    //admin
+    router.post('/api/admin/get-all-user', getAllUser);
+    router.post('/api/admin/remove-account', removeUserById);
+    router.post('/api/admin/get-all-order-tour', getAllOrder);
+    
     //ticket
     //get ticket by id
     router.post('/api/get-ticket-by-id');
@@ -88,6 +100,8 @@ let initWebRoutes = (app)=>{
     //hotel
     router.post('/api/get-hotel-by-city', getListHotelByCity);
     router.post('/api/get-hotel-offers-search', getHotelOfferSearch);
+    //admin
+    // router.post('/api/admin/get-order', getOder);
     return app.use("/", router);
 }
 

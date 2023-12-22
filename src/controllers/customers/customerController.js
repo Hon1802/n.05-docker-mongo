@@ -2,7 +2,8 @@ import multer from "multer";
 import fs from 'fs'
 import {
     handleFilter,
-    getLastTour
+    getLastTour,
+    handleGetTourRegister
 } from "../../services/toursService.js" ;
 import {
     handleHotTour
@@ -196,6 +197,23 @@ export const hotTour = async (req, res) =>{
             }));
             return item;
         });
+        return res.status(tourData.status).json({
+            errCode: tourData.errCode,
+            message: tourData.errMessage,
+            tourData
+        }) 
+    }catch(e)
+    {
+        return res.status(400).json({
+            errCode: 1,
+            message: 'Error when get',
+        }) 
+    }
+}
+export const getTourRegister = async (req, res) =>{
+    try{
+        let idUser = req.body.idUser;
+        let tourData = await handleGetTourRegister(idUser);
         return res.status(tourData.status).json({
             errCode: tourData.errCode,
             message: tourData.errMessage,
